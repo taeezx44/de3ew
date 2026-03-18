@@ -1148,17 +1148,26 @@ function logout(){
 // ============================================================
 async function initPyodide(){
   if(pyodide) return;
-  const st=document.getElementById('py-status');
-  if(st) st.textContent='[โหลด Python...]';
+  
   try {
-    pyodide = await loadPyodide();
-    // Install common packages
-    await pyodide.loadPackage(['numpy', 'pandas']);
-    if(st && currentLang==='python') st.textContent='[Python ready]';
+    showText('กำลังโหลด Pyodide...');
+    pyodide = await loadPyodide({
+      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+    });
+    
+    // Load basic packages
+    try {
+      await pyodide.loadPackage(['numpy']);
+    } catch(e) {
+      console.warn('Failed to load numpy:', e);
+    }
+    
     console.log('Pyodide loaded successfully');
-  } catch(e) { 
-    console.error('Pyodide load error:', e);
-    if(st) st.textContent='[Pyodide unavailable]'; 
+    showText('Python environment ready!');
+    
+  } catch(error) {
+    console.error('Failed to load Pyodide:', error);
+    showText('ไม่สามารถโหลด Python environment ได้\nError: ' + error.message, true);
   }
 }
 
@@ -1325,40 +1334,58 @@ setTimeout(()=>{if(_l.length)document.getElementById('out').textContent=_l.join(
 }
 
 async function runPython(code){
-  if(!pyodide){
-    showText('[กำลังโหลด Pyodide... รอสักครู่]');
-    await initPyodide();
-    if(!pyodide){ showText('ไม่สามารถโหลด Pyodide ได้\nลองโหลดหน้าใหม่', true); return; }
-  }
+  showText('กำลังโหลด Python environment...');
+  
   try {
-    // Use the proper stdout capture method
+    // Initialize Pyodide if not ready
+    if(!pyodide){
+      await initPyodide();
+      if(!pyodide){
+        showText('ไม่สามารถโหลด Pyodide ได้\nกรุณาลองโหลดหน้าใหม่', true);
+        return;
+      }
+    }
+    
+    showText('กำลังรัน Python code...');
+    
+    // Simple and reliable output capture
     pyodide.runPython(`
 import sys
 from io import StringIO
+import builtins
+
+# Capture stdout
+old_stdout = sys.stdout
 sys.stdout = StringIO()
-sys.stderr = StringIO()
+
+# Also capture print function
+original_print = builtins.print
+def custom_print(*args, **kwargs):
+    original_print(*args, **kwargs)
+    
+# Store original output
+output_buffer = []
 `);
     
-    // Run the user code
+    // Run user code
     pyodide.runPython(code);
     
-    // Get the output
-    const output = pyodide.runPython(`
+    // Get output
+    const result = pyodide.runPython(`
 output = sys.stdout.getvalue()
-error_output = sys.stderr.getvalue()
-sys.stdout = sys.__stdout__
-sys.stderr = sys.__stderr__
-output, error_output
+sys.stdout = old_stdout
+output
 `);
     
-    let result = '';
-    if (output[0]) result += output[0];
-    if (output[1]) result += (result ? '\n' : '') + 'Error: ' + output[1];
+    if(result && result.trim()) {
+      showText(result);
+    } else {
+      showText('(ไม่มี output)');
+    }
     
-    showText(result || '(ไม่มี output)');
-  } catch(e) {
-    console.error('Python execution error:', e);
-    showText('Error: ' + String(e), true);
+  } catch(error) {
+    console.error('Python execution error:', error);
+    showText(`Error: ${error.message}\n\nตรวจสอบโค้ดและลองใหม่`, true);
   }
 }
 

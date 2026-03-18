@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .test-code { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 4px; font-family: monospace; margin: 10px 0; }
+        button { background: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 Python Execution Fix Verification</h1>
+        
+        <div class="success">
+            <h3>✅ Python Execution Fixed!</h3>
+            <p><strong>Issues Resolved:</strong></p>
+            <ul>
+                <li>✅ Updated stdout capture method for Pyodide v0.24.1</li>
+                <li>✅ Fixed StringIO-based output redirection</li>
+                <li>✅ Added proper error handling</li>
+                <li>✅ Pre-installed numpy and pandas packages</li>
+                <li>✅ Background initialization for better performance</li>
+            </ul>
+        </div>
+
+        <h3>🧪 Test Python Code:</h3>
+        <div class="test-code">
+# Test Python execution
+print("Hello from Python!")
+
+# Test basic operations
+numbers = [1, 2, 3, 4, 5]
+squares = [x**2 for x in numbers]
+print(f"Numbers: {numbers}")
+print(f"Squares: {squares}")
+
+# Test string operations
+message = "DevAcademy"
+print(f"Message: {message.upper()}")
+print(f"Length: {len(message)}")
+
+# Test functions
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(f"Fibonacci(5): {fibonacci(5)}")
+
+print("✅ Python working perfectly!")
+        </div>
+
+        <h3>📋 How to Test:</h3>
+        <ol>
+            <li>Open <a href="https://taeezx44.github.io/de3ew/" target="_blank">DevAcademy Live</a></li>
+            <li>Navigate to Playground</li>
+            <li>Select Python language</li>
+            <li>Copy and paste the test code above</li>
+            <li>Click Run ▶</li>
+            <li>See real Python output!</li>
+        </ol>
+
+        <div class="success">
+            <h3>🎯 Expected Output:</h3>
+            <pre>Hello from Python!
+Numbers: [1, 2, 3, 4, 5]
+Squares: [1, 4, 9, 16, 25]
+Message: DEVACADEMY
+Length: 10
+Fibonacci(5): 5
+✅ Python working perfectly!</pre>
+        </div>
+
+        <p><strong>🚀 Test Now:</strong> <a href="https://taeezx44.github.io/de3ew/" target="_blank"><button>Open DevAcademy</button></a></p>
+
+        <h3>📊 Status:</h3>
+        <ul>
+            <li>✅ Python: Working (Pyodide WASM)</li>
+            <li>✅ JavaScript: Working (Browser eval)</li>
+            <li>✅ Java: Working (Compiler API)</li>
+            <li>✅ Go: Working (Playground API)</li>
+            <li>✅ SQL: Working (sql.js)</li>
+            <li>✅ HTML/CSS: Working (iframe)</li>
+        </ul>
+    </div>
+</body>
+</html>

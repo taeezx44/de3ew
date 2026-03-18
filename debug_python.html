@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        textarea { width: 100%; height: 150px; font-family: monospace; margin: 10px 0; }
+        button { background: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .output { background: #2d2d2d; color: #00d4aa; padding: 15px; font-family: monospace; border-radius: 4px; min-height: 100px; white-space: pre-wrap; }
+        .error { background: #ff6b6b; color: white; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 Python Execution Debug</h1>
+        
+        <div class="debug" id="debug-info">
+            Debug info will appear here...
+        </div>
+        
+        <textarea id="code" placeholder="Enter Python code...">print("Hello World!")
+x = [1, 2, 3, 4, 5]
+print(f"Numbers: {x}")
+print(f"Sum: {sum(x)}")</textarea>
+        
+        <div>
+            <button onclick="testPyodideLoad()">1. Test Pyodide Load</button>
+            <button onclick="testPythonExecution()">2. Test Python Execution</button>
+            <button onclick="clearOutput()">Clear</button>
+        </div>
+        
+        <h3>Output:</h3>
+        <div id="output" class="output">Ready to test...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+        let pyodide = null;
+        let debugDiv = document.getElementById('debug-info');
+        let outputDiv = document.getElementById('output');
+        
+        function log(message) {
+            console.log(message);
+            debugDiv.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+        }
+        
+        function showOutput(text, isError = false) {
+            outputDiv.textContent = text;
+            outputDiv.className = isError ? 'output error' : 'output';
+        }
+        
+        async function testPyodideLoad() {
+            log('Starting Pyodide load test...');
+            showOutput('Loading Pyodide...');
+            
+            try {
+                pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+                });
+                log('✅ Pyodide loaded successfully!');
+                showOutput('Pyodide loaded! Ready to run Python code.');
+            } catch(error) {
+                log('❌ Failed to load Pyodide: ' + error.message);
+                showOutput('Error loading Pyodide: ' + error.message, true);
+            }
+        }
+        
+        async function testPythonExecution() {
+            if (!pyodide) {
+                log('❌ Pyodide not loaded yet!');
+                showOutput('Please load Pyodide first!', true);
+                return;
+            }
+            
+            const code = document.getElementById('code').value;
+            log('Starting Python execution test...');
+            showOutput('Running Python code...');
+            
+            try {
+                // Setup output capture
+                pyodide.runPython(`
+import sys
+from io import StringIO
+old_stdout = sys.stdout
+sys.stdout = StringIO()
+`);
+                
+                // Run user code
+                pyodide.runPython(code);
+                
+                // Get output
+                const result = pyodide.runPython(`
+output = sys.stdout.getvalue()
+sys.stdout = old_stdout
+output
+`);
+                
+                log('✅ Python execution successful!');
+                log('Output length: ' + result.length + ' characters');
+                showOutput(result || '(no output)');
+                
+            } catch(error) {
+                log('❌ Python execution failed: ' + error.message);
+                showOutput('Python Error: ' + error.message, true);
+            }
+        }
+        
+        function clearOutput() {
+            debugDiv.innerHTML = 'Debug info will appear here...';
+            outputDiv.textContent = 'Ready to test...';
+            outputDiv.className = 'output';
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            log('Page loaded, Pyodide script available');
+            if (typeof loadPyodide !== 'undefined') {
+                log('✅ loadPyodide function found');
+            } else {
+                log('❌ loadPyodide function NOT found');
+            }
+        });
+    </script>
+</body>
+</html>
