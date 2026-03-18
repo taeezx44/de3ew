@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevAcademy — เรียนรู้การเขียนโปรแกรม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+ --bg: #0a0a0f;
+ --bg2: #0f0f1a;
+ --bg3: #141428;
+ --card: #111120;
+ --border: #1e1e3a;
+ --accent: #6c63ff;
+ --accent2: #00d4aa;
+ --accent3: #ff6b6b;
+ --accent4: #ffd93d;
+ --text: #e8e8f0;
+ --muted: #666680;
+ --mono: 'Space Mono', monospace;
+ --sans: 'Sarabun', sans-serif;
+ --display: 'Syne', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;overflow-x:hidden}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+/* Noise overlay */
+body::before{
+ content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+ background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+ pointer-events:none;z-index:9999;opacity:0.4
+}
+
+/* ===== NAV ===== */
+nav{
+ position:fixed;top:0;left:0;right:0;z-index:100;
+ display:flex;align-items:center;justify-content:space-between;
+ padding:0 2rem;height:60px;
+ background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);
+ border-bottom:1px solid var(--border)
+}
+.nav-logo{
+ font-family:var(--display);font-size:1.3rem;font-weight:800;
+ color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px
+}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:0.2rem;align-items:center}
+.nav-links a,.nav-links button{
+ background:none;border:none;color:var(--muted);
+ font-family:var(--sans);font-size:0.85rem;
+ padding:6px 14px;border-radius:6px;cursor:pointer;
+ text-decoration:none;transition:all 0.2s
+}
+.nav-links a:hover,.nav-links button:hover{color:var(--text);background:var(--border)}
+.nav-links .active{color:var(--accent)!important}
+.btn-login-nav{
+ background:var(--accent)!important;color:#fff!important;
+ border-radius:8px!important;padding:7px 18px!important
+}
+.btn-login-nav:hover{background:#5a52e0!important;transform:translateY(-1px)}
+
+/* ===== PAGES ===== */
+.page{display:none;min-height:100vh;padding-top:60px}
+.page.active{display:block}
+
+/* ===== HERO ===== */
+#hero{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ min-height:100vh;text-align:center;padding:2rem;
+ background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,99,255,0.15) 0%, transparent 70%)
+}
+.hero-badge{
+ display:inline-flex;align-items:center;gap:8px;
+ background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.3);
+ border-radius:100px;padding:6px 16px;font-size:0.8rem;
+ color:var(--accent);margin-bottom:2rem;font-family:var(--mono)
+}
+.hero-badge::before{content:'';animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+h1.hero-title{
+ font-family:var(--display);font-size:clamp(2.5rem,7vw,5rem);
+ font-weight:800;line-height:1.05;margin-bottom:1.5rem;
+ background:linear-gradient(135deg,#fff 30%,var(--accent) 70%);
+ -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.hero-sub{color:var(--muted);font-size:1.1rem;max-width:520px;line-height:1.7;margin-bottom:2.5rem}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn{
+ padding:12px 28px;border-radius:10px;font-size:0.9rem;
+ font-family:var(--sans);font-weight:600;cursor:pointer;
+ border:none;transition:all 0.25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#5a52e0;transform:translateY(-2px);box-shadow:0 8px 25px rgba(108,99,255,0.4)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+.hero-stats{
+ display:flex;gap:3rem;margin-top:4rem;
+ border-top:1px solid var(--border);padding-top:2rem
+}
+.stat{text-align:center}
+.stat-num{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--accent)}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:2px}
+
+/* Feature cards */
+.features{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:1rem;padding:2rem;max-width:1100px;margin:0 auto
+}
+.feature-card{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:14px;padding:1.5rem;
+ transition:all 0.3s;cursor:pointer
+}
+.feature-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.feature-icon{font-size:2rem;margin-bottom:0.8rem}
+.feature-card h3{font-family:var(--display);font-size:1rem;font-weight:700;margin-bottom:0.4rem}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+
+/* ===== SECTION HEADER ===== */
+.section-wrap{max-width:1100px;margin:0 auto;padding:3rem 2rem}
+.section-header{
+ display:flex;align-items:center;justify-content:space-between;
+ margin-bottom:2rem;flex-wrap:wrap;gap:1rem
+}
+.section-header h2{
+ font-family:var(--display);font-size:1.6rem;font-weight:800;
+ display:flex;align-items:center;gap:10px
+}
+.section-header h2 span{
+ font-size:0.75rem;font-family:var(--mono);
+ color:var(--accent);background:rgba(108,99,255,0.1);
+ padding:3px 10px;border-radius:4px;font-weight:400
+}
+
+/* ===== PLAYGROUND PAGE ===== */
+#playground-page .playground-layout{
+ display:grid;grid-template-columns:200px 1fr;
+ height:calc(100vh - 60px);
+}
+.lang-sidebar{
+ background:var(--bg2);border-right:1px solid var(--border);
+ padding:1rem;display:flex;flex-direction:column;gap:0.5rem
+}
+.lang-sidebar h3{
+ font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+ text-transform:uppercase;letter-spacing:2px;padding:0.5rem 0;
+ border-bottom:1px solid var(--border);margin-bottom:0.5rem
+}
+.lang-btn{
+ display:flex;align-items:center;gap:10px;
+ background:none;border:none;color:var(--muted);
+ padding:10px 12px;border-radius:8px;cursor:pointer;
+ font-family:var(--sans);font-size:0.9rem;width:100%;
+ transition:all 0.2s;text-align:left
+}
+.lang-btn:hover,.lang-btn.active{background:var(--border);color:var(--text)}
+.lang-btn.active{border-left:3px solid var(--accent);color:var(--accent)}
+.lang-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+.playground-main{
+ display:grid;grid-template-rows:auto 1fr auto 1fr;
+ overflow:hidden
+}
+.editor-toolbar{
+ background:var(--bg2);border-bottom:1px solid var(--border);
+ padding:0.5rem 1rem;display:flex;align-items:center;gap:1rem
+}
+.editor-toolbar span{font-family:var(--mono);font-size:0.8rem;color:var(--muted)}
+.run-btn{
+ background:var(--accent2);color:#000;border:none;
+ padding:6px 20px;border-radius:6px;font-weight:700;
+ font-size:0.85rem;cursor:pointer;transition:all 0.2s;
+ font-family:var(--sans);margin-left:auto
+}
+.run-btn:hover{background:#00c49a;transform:scale(1.03)}
+#code-editor{
+ background:#0d0d1e;color:#a9b7d0;
+ font-family:var(--mono);font-size:13px;
+ border:none;outline:none;padding:1.5rem;
+ resize:none;width:100%;height:100%;line-height:1.7;
+ tab-size:2;overflow-y:auto
+}
+.output-bar{
+ background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+ padding:6px 1rem;display:flex;align-items:center;gap:8px;
+ font-family:var(--mono);font-size:0.75rem;color:var(--muted)
+}
+.output-bar span{color:var(--accent2)}
+#output-frame{
+ width:100%;height:100%;border:none;
+ background:#fff;
+}
+#output-text{
+ background:#0a0a14;color:#00d4aa;
+ font-family:var(--mono);font-size:13px;
+ padding:1.5rem;height:100%;overflow-y:auto;
+ display:none;white-space:pre-wrap;line-height:1.7
+}
+
+/* ===== EBOOK PAGE ===== */
+.ebook-grid{
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+ gap:1.5rem
+}
+.ebook-card{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:14px;overflow:hidden;transition:all 0.3s;cursor:pointer
+}
+.ebook-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.4)}
+.ebook-cover{
+ height:160px;display:flex;align-items:center;justify-content:center;
+ font-size:3rem;position:relative;overflow:hidden
+}
+.ebook-info{padding:1rem}
+.ebook-title{font-family:var(--display);font-size:0.95rem;font-weight:700;margin-bottom:4px}
+.ebook-meta{font-size:0.78rem;color:var(--muted)}
+.ebook-tag{
+ display:inline-block;font-size:0.7rem;font-family:var(--mono);
+ padding:2px 8px;border-radius:4px;margin-top:8px
+}
+
+/* ===== ARTICLES PAGE ===== */
+.article-grid{
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+ gap:1.5rem
+}
+.article-card{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:14px;padding:1.5rem;
+ transition:all 0.3s;cursor:pointer
+}
+.article-card:hover{border-color:var(--accent2);transform:translateY(-3px)}
+.article-tag{
+ display:inline-block;font-size:0.7rem;font-family:var(--mono);
+ padding:3px 10px;border-radius:4px;margin-bottom:0.8rem
+}
+.article-card h3{font-family:var(--display);font-size:1.05rem;font-weight:700;margin-bottom:0.5rem;line-height:1.4}
+.article-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem}
+.article-footer{display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:var(--muted)}
+.article-author{display:flex;align-items:center;gap:6px}
+.avatar{
+ width:24px;height:24px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ font-size:0.7rem;font-weight:700
+}
+
+/* ===== ROADMAP PAGE ===== */
+.roadmap-container{padding:2rem;max-width:900px;margin:0 auto}
+.roadmap-path{position:relative;padding-left:40px}
+.roadmap-path::before{
+ content:'';position:absolute;left:14px;top:0;bottom:0;
+ width:2px;background:linear-gradient(to bottom,var(--accent),var(--accent2));
+ border-radius:2px
+}
+.roadmap-item{
+ position:relative;margin-bottom:2rem;
+ background:var(--card);border:1px solid var(--border);
+ border-radius:12px;padding:1.2rem 1.5rem
+}
+.roadmap-dot{
+ position:absolute;left:-33px;top:50%;transform:translateY(-50%);
+ width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);
+ background:var(--bg);z-index:1
+}
+.roadmap-item.done .roadmap-dot{background:var(--accent2);border-color:var(--accent2)}
+.roadmap-item.active-item .roadmap-dot{
+ background:var(--accent);
+ box-shadow:0 0 0 4px rgba(108,99,255,0.2);
+ animation:glow 2s infinite
+}
+@keyframes glow{0%,100%{box-shadow:0 0 0 4px rgba(108,99,255,0.2)}50%{box-shadow:0 0 0 8px rgba(108,99,255,0.1)}}
+.roadmap-title{font-family:var(--display);font-weight:700;font-size:1rem}
+.roadmap-desc{font-size:0.85rem;color:var(--muted);margin-top:4px}
+.roadmap-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{
+ font-size:0.7rem;font-family:var(--mono);padding:2px 8px;
+ border-radius:4px;background:var(--border);color:var(--muted)
+}
+
+/* ===== LEADERBOARD ===== */
+.leaderboard-wrap{max-width:700px;margin:0 auto;padding:2rem}
+.lb-item{
+ display:flex;align-items:center;gap:1rem;
+ background:var(--card);border:1px solid var(--border);
+ border-radius:12px;padding:1rem 1.5rem;margin-bottom:0.8rem;
+ transition:all 0.2s
+}
+.lb-item:hover{border-color:var(--border);transform:translateX(4px)}
+.lb-rank{
+ font-family:var(--display);font-size:1.4rem;font-weight:800;
+ width:40px;text-align:center;flex-shrink:0
+}
+.lb-rank.gold{color:var(--accent4)}
+.lb-rank.silver{color:#aaa}
+.lb-rank.bronze{color:#cd7f32}
+.lb-avatar{
+ width:44px;height:44px;border-radius:12px;
+ display:flex;align-items:center;justify-content:center;
+ font-size:1.3rem;flex-shrink:0
+}
+.lb-info{flex:1}
+.lb-name{font-family:var(--display);font-weight:700}
+.lb-username{font-size:0.78rem;color:var(--muted);font-family:var(--mono)}
+.lb-score{
+ font-family:var(--display);font-size:1.2rem;font-weight:800;
+ color:var(--accent)
+}
+.lb-badge{font-size:0.75rem;color:var(--muted);text-align:right}
+
+/* ===== LOGIN MODAL ===== */
+.modal-overlay{
+ display:none;position:fixed;inset:0;
+ background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);
+ z-index:200;align-items:center;justify-content:center
+}
+.modal-overlay.open{display:flex}
+.modal{
+ background:var(--bg2);border:1px solid var(--border);
+ border-radius:20px;padding:2.5rem;width:min(420px,90vw);
+ animation:slideUp 0.3s ease
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-logo{
+ font-family:var(--display);font-size:1.5rem;font-weight:800;
+ margin-bottom:0.3rem
+}
+.modal-logo span{color:var(--accent)}
+.modal-sub{font-size:0.85rem;color:var(--muted);margin-bottom:2rem}
+.form-group{margin-bottom:1.2rem}
+.form-group label{
+ display:block;font-size:0.8rem;color:var(--muted);
+ margin-bottom:6px;font-family:var(--mono)
+}
+.form-group input{
+ width:100%;background:var(--bg);border:1px solid var(--border);
+ color:var(--text);padding:12px 14px;border-radius:10px;
+ font-size:0.9rem;font-family:var(--sans);outline:none;
+ transition:border-color 0.2s
+}
+.form-group input:focus{border-color:var(--accent)}
+.btn-full{width:100%;padding:13px;border-radius:10px;font-size:1rem}
+.modal-close{
+ float:right;background:none;border:none;color:var(--muted);
+ cursor:pointer;font-size:1.3rem;margin-top:-8px
+}
+.modal-close:hover{color:var(--text)}
+.form-error{
+ font-size:0.8rem;color:var(--accent3);
+ margin-top:8px;display:none
+}
+
+/* ===== ADMIN PAGE ===== */
+#admin-page{background:var(--bg)}
+.admin-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px)}
+.admin-sidebar{
+ background:var(--bg2);border-right:1px solid var(--border);
+ padding:1.5rem 1rem
+}
+.admin-sidebar h3{
+ font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+ text-transform:uppercase;letter-spacing:2px;
+ padding-bottom:0.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem
+}
+.admin-menu-item{
+ display:flex;align-items:center;gap:10px;
+ padding:10px 12px;border-radius:8px;cursor:pointer;
+ color:var(--muted);font-size:0.9rem;transition:all 0.2s;
+ margin-bottom:4px
+}
+.admin-menu-item:hover,.admin-menu-item.active{background:var(--border);color:var(--text)}
+.admin-menu-item.active{color:var(--accent)}
+.admin-content{padding:2rem;flex:1}
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:12px;padding:1.2rem
+}
+.stat-card .num{font-family:var(--display);font-size:2rem;font-weight:800}
+.stat-card .lbl{font-size:0.8rem;color:var(--muted);margin-top:2px}
+.upload-zone{
+ border:2px dashed var(--border);border-radius:14px;
+ padding:3rem;text-align:center;cursor:pointer;
+ transition:all 0.2s
+}
+.upload-zone:hover{border-color:var(--accent);background:rgba(108,99,255,0.03)}
+.upload-icon{font-size:3rem;margin-bottom:1rem}
+.upload-text{font-size:0.9rem;color:var(--muted)}
+.upload-text strong{color:var(--accent)}
+.file-input{display:none}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:1.5rem}
+table{width:100%;border-collapse:collapse}
+th{background:var(--bg2);padding:10px 16px;text-align:left;font-size:0.78rem;color:var(--muted);font-family:var(--mono);font-weight:400;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;font-size:0.85rem;border-bottom:1px solid rgba(30,30,58,0.5)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.status-badge{
+ display:inline-block;font-size:0.7rem;padding:3px 10px;
+ border-radius:100px;font-family:var(--mono)
+}
+.status-active{background:rgba(0,212,170,0.1);color:var(--accent2)}
+.status-draft{background:rgba(255,217,61,0.1);color:var(--accent4)}
+.delete-btn{
+ background:rgba(255,107,107,0.1);color:var(--accent3);
+ border:none;padding:5px 12px;border-radius:6px;
+ font-size:0.78rem;cursor:pointer;font-family:var(--sans);
+ transition:all 0.2s
+}
+.delete-btn:hover{background:rgba(255,107,107,0.2)}
+
+/* ===== NOTIFICATION ===== */
+.toast{
+ position:fixed;bottom:2rem;right:2rem;
+ background:var(--accent2);color:#000;
+ padding:12px 20px;border-radius:10px;font-weight:600;
+ z-index:9998;transform:translateY(100px);opacity:0;
+ transition:all 0.3s;font-size:0.85rem
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ===== PROFILE ===== */
+.profile-wrap{max-width:800px;margin:0 auto;padding:2rem}
+.profile-header{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:16px;padding:2rem;display:flex;gap:2rem;
+ align-items:center;margin-bottom:1.5rem;flex-wrap:wrap
+}
+.profile-avatar-big{
+ width:80px;height:80px;border-radius:20px;
+ display:flex;align-items:center;justify-content:center;
+ font-size:2.5rem;flex-shrink:0;
+ background:linear-gradient(135deg,var(--accent),var(--accent2))
+}
+.profile-name{font-family:var(--display);font-size:1.5rem;font-weight:800}
+.profile-username{font-family:var(--mono);font-size:0.85rem;color:var(--muted);margin-top:2px}
+.profile-bio{font-size:0.9rem;color:var(--muted);margin-top:8px;line-height:1.6}
+.profile-stats{display:flex;gap:2rem;margin-top:1rem;flex-wrap:wrap}
+.ps{text-align:center}
+.ps-num{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--accent)}
+.ps-lbl{font-size:0.75rem;color:var(--muted)}
+.badges-wrap{display:flex;gap:8px;flex-wrap:wrap;margin-top:1.5rem}
+.badge{
+ display:inline-flex;align-items:center;gap:6px;
+ background:var(--bg3);border:1px solid var(--border);
+ border-radius:100px;padding:5px 12px;font-size:0.78rem
+}
+.progress-list{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem}
+.progress-list h3{font-family:var(--display);font-weight:700;margin-bottom:1rem}
+.progress-item{margin-bottom:1rem}
+.progress-label{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:5px}
+.progress-bar{background:var(--border);border-radius:100px;height:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+ .admin-layout{grid-template-columns:1fr}
+ .admin-sidebar{display:flex;flex-wrap:wrap;gap:0.5rem;padding:1rem}
+ .admin-sidebar h3{display:none}
+ #playground-page .playground-layout{grid-template-columns:1fr;grid-template-rows:auto auto 1fr auto 1fr}
+ .lang-sidebar{flex-direction:row;flex-wrap:wrap;padding:0.5rem;border-right:none;border-bottom:1px solid var(--border)}
+ .hero-stats{gap:1.5rem}
+ .nav-links a:not(.btn-login-nav){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+ <a class="nav-logo" href="#" onclick="showPage('home')">Dev<span>Academy</span></a>
+ <div class="nav-links">
+ <a href="#" onclick="showPage('home')" class="active" id="nav-home">หน้าแรก</a>
+ <a href="#" onclick="showPage('playground')">Playground</a>
+ <a href="#" onclick="showPage('ebooks')">E-Book</a>
+ <a href="#" onclick="showPage('articles')">บทความ</a>
+ <a href="#" onclick="showPage('roadmap')">Roadmap</a>
+ <a href="#" onclick="showPage('leaderboard')">Leaderboard</a>
+ <span id="profile-nav" style="display:none">
+ <a href="#" onclick="showPage('profile')"> โปรไฟล์</a>
+ <a href="#" onclick="showPage('admin')" id="admin-link" style="display:none;color:var(--accent4)">Admin</a>
+ <button onclick="logout()" style="color:var(--accent3)!important">ออกจากระบบ</button>
+ </span>
+ <button class="btn-login-nav" id="login-nav-btn" onclick="openLogin()">เข้าสู่ระบบ</button>
+ </div>
+</nav>
+
+<!-- ===== PAGE: HOME ===== -->
+<div class="page active" id="home-page">
+ <div id="hero">
+ <div class="hero-badge"> แพลตฟอร์มเรียนรู้สำหรับนักพัฒนาไทย</div>
+ <h1 class="hero-title">เรียนรู้การเขียนโค้ด<br>พัฒนาตัวเองทุกวัน</h1>
+ <p class="hero-sub">DevAcademy รวมบทเรียน บทความ และ Playground ที่ให้คุณฝึกเขียนโปรแกรมได้ทันที ไม่ต้องติดตั้งอะไร</p>
+ <div class="hero-btns">
+ <a href="#" class="btn btn-primary" onclick="showPage('playground')"> ลอง Playground</a>
+ <a href="#" class="btn btn-outline" onclick="showPage('roadmap')"> ดู Roadmap</a>
+ </div>
+ <div class="hero-stats">
+ <div class="stat"><div class="stat-num">50+</div><div class="stat-label">บทเรียน</div></div>
+ <div class="stat"><div class="stat-num">12</div><div class="stat-label">E-Books</div></div>
+ <div class="stat"><div class="stat-num">6</div><div class="stat-label">ภาษา</div></div>
+ <div class="stat"><div class="stat-num">500+</div><div class="stat-label">ผู้เรียน</div></div>
+ </div>
+ </div>
+
+ <div class="section-wrap">
+ <div class="section-header">
+ <h2> เริ่มต้นได้เลย <span>FEATURED</span></h2>
+ </div>
+ <div class="features">
+ <div class="feature-card" onclick="showPage('playground')">
+ <h3>Code Playground</h3>
+ <p>ทดลองเขียนโค้ด HTML, Python, Java, JS และอื่น ๆ ได้ทันทีในเบราว์เซอร์</p>
+ </div>
+ <div class="feature-card" onclick="showPage('ebooks')">
+ <h3>E-Book Library</h3>
+ <p>รวม PDF หนังสือและเอกสารประกอบการเรียน ดาวน์โหลดได้ฟรี</p>
+ </div>
+ <div class="feature-card" onclick="showPage('articles')">
+ <h3>บทความ</h3>
+ <p>บทความเชิงลึกเกี่ยวกับ Backend, DevOps, System Design และอื่น ๆ</p>
+ </div>
+ <div class="feature-card" onclick="showPage('roadmap')">
+ <h3>Learning Roadmap</h3>
+ <p>เส้นทางการเรียนรู้ที่ชัดเจน จาก Beginner ไปสู่ Professional</p>
+ </div>
+ <div class="feature-card" onclick="showPage('leaderboard')">
+ <h3>Leaderboard</h3>
+ <p>แข่งขัน เก็บคะแนน และติดตามความก้าวหน้ากับเพื่อน ๆ</p>
+ </div>
+ <div class="feature-card">
+ <h3>AI Assistant</h3>
+ <p>ถาม AI ได้เลยเมื่อติดปัญหา มี Code Review และ Debug ให้อัตโนมัติ</p>
+ </div>
+ </div>
+ </div>
+</div>
+
+<!-- ===== PAGE: PLAYGROUND ===== -->
+<div class="page" id="playground-page">
+ <div class="playground-layout">
+ <div class="lang-sidebar">
+ <h3>Language</h3>
+ <button class="lang-btn active" onclick="setLang('html',this)">
+ <span class="lang-dot" style="background:#e44d26"></span>HTML
+ </button>
+ <button class="lang-btn" onclick="setLang('css',this)">
+ <span class="lang-dot" style="background:#264de4"></span>CSS
+ </button>
+ <button class="lang-btn" onclick="setLang('js',this)">
+ <span class="lang-dot" style="background:#f7df1e"></span>JavaScript
+ </button>
+ <button class="lang-btn" onclick="setLang('python',this)">
+ <span class="lang-dot" style="background:#3776ab"></span>Python
+ </button>
+ <button class="lang-btn" onclick="setLang('java',this)">
+ <span class="lang-dot" style="background:#f89820"></span>Java
+ </button>
+ <button class="lang-btn" onclick="setLang('go',this)">
+ <span class="lang-dot" style="background:#00add8"></span>Go
+ </button>
+ <button class="lang-btn" onclick="setLang('sql',this)">
+ <span class="lang-dot" style="background:#cc2927"></span>SQL
+ </button>
+ <div style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--border)">
+ <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px;font-family:var(--mono)">Templates</div>
+ <button class="lang-btn" onclick="loadTemplate()" style="font-size:0.8rem"> โหลด Template</button>
+ <button class="lang-btn" onclick="clearEditor()" style="font-size:0.8rem;color:var(--accent3)!important"> ล้าง</button>
+ </div>
+ </div>
+ <div class="playground-main">
+ <div class="editor-toolbar">
+ <span id="lang-label">HTML</span>
+ <span id="note-label" style="font-size:0.75rem">Python/Java/Go/SQL จะแสดง Simulated Output</span>
+ <button class="run-btn" id="run-btn" onclick="runCode()">Run</button>
+ </div>
+ <textarea id="code-editor" spellcheck="false" placeholder="// เขียนโค้ดที่นี่..."></textarea>
+ <div class="output-bar">
+ <span>OUTPUT</span>
+ <span id="output-time"></span>
+ </div>
+ <iframe id="output-frame"></iframe>
+ <div id="output-text"></div>
+ </div>
+ </div>
+</div>
+
+<!-- ===== PAGE: EBOOKS ===== -->
+<div class="page" id="ebooks-page">
+ <div class="section-wrap">
+ <div class="section-header">
+ <h2>E-Book Library <span>PDF</span></h2>
+ <input type="text" placeholder=" ค้นหา E-Book..." id="ebook-search"
+ style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;font-family:var(--sans);outline:none;font-size:0.85rem"
+ oninput="filterEbooks(this.value)">
+ </div>
+ <div class="ebook-grid" id="ebook-grid"></div>
+ </div>
+</div>
+
+<!-- ===== PAGE: ARTICLES ===== -->
+<div class="page" id="articles-page">
+ <div class="section-wrap">
+ <div class="section-header">
+ <h2> บทความ <span>BLOG</span></h2>
+ <div style="display:flex;gap:0.5rem;flex-wrap:wrap" id="tag-filters"></div>
+ </div>
+ <div class="article-grid" id="article-grid"></div>
+ </div>
+</div>
+
+<!-- ===== PAGE: ROADMAP ===== -->
+<div class="page" id="roadmap-page">
+ <div class="section-wrap" style="text-align:center;padding-bottom:0">
+ <h2 style="font-family:var(--display);font-size:2rem;font-weight:800;margin-bottom:0.5rem">Learning Roadmap</h2>
+ <p style="color:var(--muted);font-size:0.9rem">เส้นทางการเรียนรู้จาก Zero ถึง Professional</p>
+ <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap" id="roadmap-tabs"></div>
+ </div>
+ <div class="roadmap-container" id="roadmap-content"></div>
+</div>
+
+<!-- ===== PAGE: LEADERBOARD ===== -->
+<div class="page" id="leaderboard-page">
+ <div class="section-wrap" style="text-align:center;padding-bottom:0">
+ <h2 style="font-family:var(--display);font-size:2rem;font-weight:800;margin-bottom:0.5rem">Leaderboard</h2>
+ <p style="color:var(--muted)">คะแนนสะสมจากการทำ Challenge และ Quiz</p>
+ </div>
+ <div class="leaderboard-wrap" id="leaderboard-list"></div>
+</div>
+
+<!-- ===== PAGE: PROFILE ===== -->
+<div class="page" id="profile-page">
+ <div class="profile-wrap" id="profile-content"></div>
+</div>
+
+<!-- ===== PAGE: ADMIN ===== -->
+<div class="page" id="admin-page">
+ <div class="admin-layout">
+ <div class="admin-sidebar">
+ <h3>ADMIN PANEL</h3>
+ <div class="admin-menu-item active" onclick="adminTab('dashboard',this)">Dashboard</div>
+ <div class="admin-menu-item" onclick="adminTab('upload',this)"> อัพโหลด E-Book</div>
+ <div class="admin-menu-item" onclick="adminTab('articles',this)"> จัดการบทความ</div>
+ <div class="admin-menu-item" onclick="adminTab('users',this)"> สมาชิก</div>
+ <div class="admin-menu-item" onclick="adminTab('settings',this)"> ตั้งค่า</div>
+ </div>
+ <div class="admin-content" id="admin-content"></div>
+ </div>
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="modal-overlay" id="login-modal">
+ <div class="modal">
+ <button class="modal-close" onclick="closeModal()"></button>
+ <div class="modal-logo">Dev<span>Academy</span></div>
+ <p class="modal-sub">เข้าสู่ระบบเพื่อเข้าถึงฟีเจอร์ทั้งหมด</p>
+ <div class="form-group">
+ <label>USERNAME / EMAIL</label>
+ <input type="text" id="login-user" placeholder="ใส่ username หรือ email" autocomplete="off">
+ </div>
+ <div class="form-group">
+ <label>PASSWORD</label>
+ <input type="password" id="login-pass" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter')doLogin()">
+ </div>
+ <div class="form-error" id="login-error">username หรือรหัสผ่านไม่ถูกต้อง</div>
+ <button class="btn btn-primary btn-full" onclick="doLogin()">เข้าสู่ระบบ</button>
+ <p style="font-size:0.8rem;color:var(--muted);text-align:center;margin-top:1rem">
+ ทดสอบ: <code style="color:var(--accent2)">admin / admin123</code> หรือ <code style="color:var(--accent2)">user / user123</code>
+ </p>
+ </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<script>
+// Pyodide for Python
+let pyodide = null;
+let sqlDB = null;
+
+// State
+let currentUser = null;
+let currentLang = 'html';
+let currentRoadmap = 'Frontend';
+let articleEditId = null;
+let currentTagFilter = '';
+
+const USERS = [
+  {id:1,username:'admin',password:'admin123',role:'admin',name:'Admin Dev',initials:'AD',bio:'ผู้ดูแลระบบ DevAcademy',points:9999},
+  {id:2,username:'user',password:'user123',role:'user',name:'นักเรียน คน',initials:'NK',bio:'นักพัฒนาหน้าใหม่ที่อยากเรียนรู้',points:420},
+];
+
+let EBOOKS = [
+  {id:1,title:'JavaScript The Good Parts',author:'Douglas Crockford',ac:'#6c63ff',bg:'rgba(108,99,255,0.15)',tag:'JavaScript',letter:'JS'},
+  {id:2,title:'Clean Code',author:'Robert C. Martin',ac:'#00d4aa',bg:'rgba(0,212,170,0.15)',tag:'Best Practice',letter:'CC'},
+  {id:3,title:'Python Crash Course',author:'Eric Matthes',ac:'#ffd93d',bg:'rgba(255,217,61,0.15)',tag:'Python',letter:'PY'},
+  {id:4,title:'The Go Programming Language',author:'Alan Donovan',ac:'#00add8',bg:'rgba(0,173,216,0.15)',tag:'Go',letter:'GO'},
+  {id:5,title:'Docker Deep Dive',author:'Nigel Poulton',ac:'#ff6b6b',bg:'rgba(255,107,107,0.15)',tag:'DevOps',letter:'DK'},
+  {id:6,title:'System Design Interview',author:'Alex Xu',ac:'#a78bfa',bg:'rgba(167,139,250,0.15)',tag:'Architecture',letter:'SD'},
+];
+
+let ARTICLES = [
+  {id:1,title:'เริ่มต้น Go สำหรับ Backend Developer',
+   summary:'ทำความรู้จัก Go ตั้งแต่ต้น เหมาะสำหรับคนที่เขียน Node.js มาแล้ว',
+   tag:'Go',tagColor:'rgba(0,173,216,0.15)',tagText:'#00add8',
+   author:'Admin Dev',date:'15 มี.ค. 2025',readTime:'8 min',
+   body:`## ทำไมต้องเรียน Go?
+
+Go เป็นภาษาที่ Google พัฒนาขึ้น มีจุดเด่นคือ **ความเร็ว** และ **Concurrency** ผ่าน Goroutine
+
+### Hello World
+
+\`\`\`
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+\`\`\`
+
+### Goroutine พื้นฐาน
+
+\`\`\`
+go func() {
+    fmt.Println("running concurrently")
+}()
+\`\`\`
+
+Goroutine เบากว่า Thread มาก สามารถรันได้หลายพันตัวพร้อมกัน`},
+
+  {id:2,title:'Docker + PostgreSQL Production Setup',
+   summary:'ตั้งค่า Docker Compose สำหรับ PostgreSQL ใน Production อย่างถูกต้อง',
+   tag:'DevOps',tagColor:'rgba(255,107,107,0.15)',tagText:'#ff6b6b',
+   author:'Admin Dev',date:'10 มี.ค. 2025',readTime:'12 min',
+   body:`## Docker Compose สำหรับ PostgreSQL
+
+### docker-compose.yml
+
+\`\`\`
+version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: \${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  pgdata:
+\`\`\`
+
+### Best Practices
+
+ใช้ **Alpine image** เพื่อลดขนาด เก็บ password ใน **.env file** และใช้ **Volume** เพื่อให้ข้อมูลไม่หายเมื่อ restart`},
+
+  {id:3,title:'Next.js App Router ทุกเรื่องที่ควรรู้',
+   summary:'Server Components, Streaming, Suspense และทุกฟีเจอร์ใหม่',
+   tag:'Next.js',tagColor:'rgba(255,255,255,0.06)',tagText:'#ccc',
+   author:'Admin Dev',date:'5 มี.ค. 2025',readTime:'15 min',
+   body:`## Next.js App Router
+
+### Server vs Client Components
+
+\`\`\`
+// Server Component (default)
+async function Page() {
+  const data = await fetch('/api/data')
+  return <div>{data}</div>
+}
+
+// Client Component
+'use client'
+import { useState } from 'react'
+\`\`\`
+
+Server Components ช่วยลด JavaScript ที่ส่งไป client ได้มาก`},
+
+  {id:4,title:'Supabase vs Firebase 2025',
+   summary:'เปรียบเทียบ BaaS สองตัวที่ฮิตที่สุด',
+   tag:'Database',tagColor:'rgba(0,212,170,0.15)',tagText:'#00d4aa',
+   author:'Admin Dev',date:'1 มี.ค. 2025',readTime:'10 min',
+   body:`## Supabase vs Firebase
+
+### Firebase
+- Real-time Database และ Firestore
+- Google ecosystem — NoSQL-based
+
+### Supabase
+- PostgreSQL จริง — Open Source
+- Row Level Security — Self-hosting ได้
+
+ถ้าต้องการ **SQL จริง** และ **control สูง** เลือก Supabase`},
+
+  {id:5,title:'System Design: Load Balancer',
+   summary:'ทำความเข้าใจ Load Balancer ตั้งแต่แนวคิดจนถึง Implementation',
+   tag:'System Design',tagColor:'rgba(167,139,250,0.15)',tagText:'#a78bfa',
+   author:'Admin Dev',date:'25 ก.พ. 2025',readTime:'20 min',
+   body:`## Load Balancer คืออะไร?
+
+กระจาย traffic ไปยังหลาย server เพื่อป้องกัน overload
+
+### Algorithms หลัก
+
+**Round Robin** — ส่งทีละ server วนไป
+
+**Least Connections** — ส่งไป server ที่มี connection น้อยสุด
+
+### Nginx Config
+
+\`\`\`
+upstream backend {
+    least_conn;
+    server server1:3000;
+    server server2:3000;
+}
+server {
+    location / { proxy_pass http://backend; }
+}
+\`\`\``},
+
+  {id:6,title:'Git Workflow สำหรับทีม',
+   summary:'Branching strategy, Conventional Commits และ Code Review',
+   tag:'Git',tagColor:'rgba(255,217,61,0.15)',tagText:'#ffd93d',
+   author:'Admin Dev',date:'20 ก.พ. 2025',readTime:'7 min',
+   body:`## Git Workflow ที่ดีสำหรับทีม
+
+### Branching Strategy
+
+\`\`\`
+main        — production code
+develop     — integration branch
+feature/*   — feature branches
+hotfix/*    — urgent fixes
+\`\`\`
+
+### Conventional Commits
+
+\`\`\`
+feat: add user authentication
+fix: resolve login redirect bug
+docs: update API documentation
+refactor: simplify auth middleware
+\`\`\``},
+];
+
+const ROADMAPS = {
+  'Frontend':[
+    {title:'HTML & CSS พื้นฐาน',desc:'Semantic HTML, Flexbox, Grid, Responsive Design',tags:['HTML','CSS'],status:'done'},
+    {title:'JavaScript Fundamentals',desc:'Variables, Functions, DOM, Events, Fetch API',tags:['JavaScript'],status:'done'},
+    {title:'React.js',desc:'Components, Hooks, State Management, React Router',tags:['React','JSX'],status:'active'},
+    {title:'Next.js',desc:'SSR, SSG, App Router, API Routes',tags:['Next.js','TypeScript'],status:''},
+    {title:'Testing & Performance',desc:'Jest, React Testing Library, Lighthouse',tags:['Testing'],status:''},
+  ],
+  'Backend':[
+    {title:'ภาษาโปรแกรมมิ่ง',desc:'เลือก 1 ภาษา: Node.js / Python / Go / Java',tags:['Node.js','Python','Go'],status:'done'},
+    {title:'Database Basics',desc:'SQL, PostgreSQL, Index, Transaction',tags:['PostgreSQL','SQL'],status:'done'},
+    {title:'REST API Design',desc:'HTTP Methods, Status Codes, Authentication',tags:['REST','JWT'],status:'active'},
+    {title:'Docker & Deployment',desc:'Containerization, Docker Compose, CI/CD',tags:['Docker','GitHub Actions'],status:''},
+    {title:'System Design',desc:'Scaling, Caching, Message Queue, Load Balancer',tags:['Redis','Kafka'],status:''},
+  ],
+  'DevOps':[
+    {title:'Linux Basics',desc:'Shell, File System, Process Management',tags:['Linux','Bash'],status:'done'},
+    {title:'Docker',desc:'Images, Containers, Volumes, Networks',tags:['Docker'],status:'done'},
+    {title:'Kubernetes',desc:'Pods, Services, Deployments, Helm',tags:['k8s'],status:'active'},
+    {title:'CI/CD Pipeline',desc:'GitHub Actions, GitLab CI, Jenkins',tags:['CI/CD'],status:''},
+    {title:'Monitoring & Observability',desc:'Prometheus, Grafana, OpenTelemetry',tags:['Monitoring'],status:''},
+  ]
+};
+
+const LEADERBOARD = [
+  {rank:1,name:'Tae Dev',username:'@0xkc',initials:'TD',bg:'linear-gradient(135deg,#6c63ff,#a78bfa)',points:9420,badge:'Legend'},
+  {rank:2,name:'Admin Dev',username:'@admin',initials:'AD',bg:'linear-gradient(135deg,#00d4aa,#00add8)',points:9999,badge:'Admin'},
+  {rank:3,name:'นักเรียน คน',username:'@user',initials:'NK',bg:'linear-gradient(135deg,#ffd93d,#ff6b6b)',points:420,badge:'Beginner'},
+  {rank:4,name:'Kittisak P.',username:'@kit_dev',initials:'KP',bg:'#2a2a3a',points:3100,badge:'Pro'},
+  {rank:5,name:'Sunisa T.',username:'@sunisa',initials:'ST',bg:'#2a2a3a',points:2800,badge:'Advanced'},
+  {rank:6,name:'Nattakorn J.',username:'@nat_j',initials:'NJ',bg:'#2a2a3a',points:2100,badge:'Intermediate'},
+];
+
+// ============================================================
+// TEMPLATES
+// ============================================================
+const TEMPLATES = {
+  html:`<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>My Page</title>
+  <style>
+    body { font-family: sans-serif; display: flex; justify-content: center;
+           align-items: center; min-height: 100vh; margin: 0;
+           background: #0a0a1a; color: #e8e8f0; }
+    .card { background: #111120; border: 1px solid #1e1e3a;
+            border-radius: 16px; padding: 2rem; text-align: center; }
+    h1 { color: #6c63ff; }
+    button { background: #6c63ff; color: white; border: none;
+             padding: 10px 24px; border-radius: 8px; cursor: pointer;
+             font-size: 1rem; margin-top: 1rem; }
+    button:hover { background: #5a52e0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hello DevAcademy!</h1>
+    <p>แก้ไขโค้ดแล้วกด Run</p>
+    <button onclick="this.textContent='Clicked!'">Click Me</button>
+  </div>
+</body>
+</html>`,
+
+  css:`body { background: #0a0a1a; display: flex; justify-content: center;
+       align-items: center; height: 100vh; margin: 0; }
+.box { width: 100px; height: 100px;
+       background: linear-gradient(135deg, #6c63ff, #00d4aa);
+       border-radius: 20px; animation: spin 2s linear infinite; }
+@keyframes spin {
+  from { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.2); }
+  to   { transform: rotate(360deg) scale(1); }
+}`,
+
+  js:`// JavaScript รันใน Browser (real eval)
+const log = [];
+const numbers = [1,2,3,4,5,6,7,8,9,10];
+const evens = numbers.filter(n => n % 2 === 0);
+const squared = evens.map(n => n * n);
+const total = squared.reduce((s,n) => s+n, 0);
+
+log.push('Array Methods:');
+log.push('  เลขคู่: ' + evens.join(', '));
+log.push('  ยกกำลัง 2: ' + squared.join(', '));
+log.push('  ผลรวม: ' + total);
+
+const dev = { name: 'Tae', lang: 'Go', level: 'Senior' };
+log.push('Developer: ' + JSON.stringify(dev));
+
+// Async
+Promise.resolve(42).then(v => v * 2).then(v => {
+  log.push('Promise result: ' + v);
+  document.getElementById('out').innerText = log.join('\\n');
+});`,
+
+  python:`# Python รันจริงด้วย Pyodide (WebAssembly)
+def fibonacci(limit):
+    a, b = 0, 1
+    result = []
+    while a < limit:
+        result.append(a)
+        a, b = b, a + b
+    return result
+
+print("Fibonacci < 100:", fibonacci(100))
+
+# List comprehension
+squares = [x**2 for x in range(1, 11)]
+print("Squares 1-10:", squares)
+
+# f-string
+student = {"name": "Tae", "score": 95, "grade": "A"}
+print(f"Student: {student['name']}, Grade: {student['grade']}")
+
+# String methods
+words = "hello devacademy"
+print("Title:", words.title())
+print("Words count:", len(words.split()))`,
+
+  go:`// Go รันผ่าน Go Playground API
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func isPrime(n int) bool {
+	if n < 2 { return false }
+	for i := 2; i*i <= n; i++ {
+		if n%i == 0 { return false }
+	}
+	return true
+}
+
+type Developer struct {
+	Name  string
+	Stack []string
+}
+
+func main() {
+	fmt.Println("=== Go Playground ===")
+
+	var primes []string
+	for i := 2; i < 50; i++ {
+		if isPrime(i) {
+			primes = append(primes, fmt.Sprintf("%d", i))
+		}
+	}
+	fmt.Println("Primes < 50:", strings.Join(primes, " "))
+
+	d := Developer{Name: "Tae", Stack: []string{"Go", "Node.js", "Python"}}
+	fmt.Printf("Dev: %s\\nStack: %s\\n", d.Name, strings.Join(d.Stack, ", "))
+}`,
+
+  sql:`-- SQL รันจริงด้วย sql.js (SQLite in browser)
+
+CREATE TABLE users (
+  id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  name  TEXT NOT NULL,
+  role  TEXT DEFAULT 'user',
+  score INTEGER DEFAULT 0
+);
+
+INSERT INTO users (name, role, score) VALUES
+  ('Admin', 'admin', 9999),
+  ('Tae',   'user',  1250),
+  ('Sunisa','user',   890),
+  ('Nat',   'user',  2100);
+
+-- Query all
+SELECT * FROM users ORDER BY score DESC;
+
+-- Aggregate
+SELECT role, COUNT(*) AS total, AVG(score) AS avg_score
+FROM users GROUP BY role;`
+};
+
+// ============================================================
+// NAV
+// ============================================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page + '-page').classList.add('active');
+  if(page==='ebooks') renderEbooks();
+  if(page==='articles') renderArticles();
+  if(page==='roadmap') renderRoadmap();
+  if(page==='leaderboard') renderLeaderboard();
+  if(page==='profile') renderProfile();
+  if(page==='admin') renderAdmin('dashboard');
+  if(page==='playground') initPlayground();
+  window.scrollTo(0,0);
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+function openLogin(){ document.getElementById('login-modal').classList.add('open'); }
+function closeModal(){
+  document.getElementById('login-modal').classList.remove('open');
+  document.getElementById('login-error').style.display='none';
+}
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  const found=USERS.find(x=>(x.username===u||x.email===u)&&x.password===p);
+  if(!found){ document.getElementById('login-error').style.display='block'; return; }
+  currentUser=found;
+  closeModal();
+  document.getElementById('login-nav-btn').style.display='none';
+  document.getElementById('profile-nav').style.display='contents';
+  if(found.role==='admin') document.getElementById('admin-link').style.display='inline';
+  showToast('ยินดีต้อนรับ '+found.name);
+}
+function logout(){
+  currentUser=null;
+  document.getElementById('login-nav-btn').style.display='';
+  document.getElementById('profile-nav').style.display='none';
+  document.getElementById('admin-link').style.display='none';
+  showPage('home');
+  showToast('ออกจากระบบแล้ว');
+}
+
+// ============================================================
+// PLAYGROUND
+// ============================================================
+async function initPyodide(){
+  if(pyodide) return;
+  const st=document.getElementById('py-status');
+  if(st) st.textContent='[โหลด Python...]';
+  try {
+    pyodide = await loadPyodide();
+    if(st && currentLang==='python') st.textContent='[Python ready]';
+  } catch(e) { if(st) st.textContent='[Pyodide unavailable]'; }
+}
+
+async function initSQL(){
+  if(sqlDB) return;
+  try {
+    const SQL = await initSqlJs({
+      locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${f}`
+    });
+    sqlDB = new SQL.Database();
+  } catch(e) { console.warn('sql.js',e); }
+}
+
+function initPlayground(){
+  const btn = document.querySelector('.lang-btn');
+  if(btn){ btn.classList.add('active'); }
+  setLang('html', btn);
+  initSQL();
+}
+
+function setLang(lang, btn){
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const labels = {html:'HTML',css:'CSS',js:'JavaScript',python:'Python',go:'Go',sql:'SQL'};
+  document.getElementById('lang-label').textContent = labels[lang]||lang;
+  const notes = {
+    python:'Pyodide (WASM) — รันจริง',
+    go:'Go Playground API — รันจริง',
+    sql:'sql.js SQLite — รันจริง',
+    js:'Browser eval — รันจริง',
+    html:'iframe render',css:'iframe render'
+  };
+  const noteEl = document.getElementById('note-label');
+  if(noteEl) noteEl.textContent = notes[lang]||'';
+  const pyEl = document.getElementById('py-status');
+  if(pyEl) pyEl.textContent = '';
+  if(TEMPLATES[lang]) document.getElementById('code-editor').value = TEMPLATES[lang];
+  if(lang==='python' && !pyodide) initPyodide();
+}
+
+function loadTemplate(){
+  if(TEMPLATES[currentLang]){
+    document.getElementById('code-editor').value = TEMPLATES[currentLang];
+    showToast('โหลด template แล้ว');
+  }
+}
+function clearEditor(){
+  document.getElementById('code-editor').value='';
+  const f=document.getElementById('output-frame');
+  const t=document.getElementById('output-text');
+  if(f){f.srcdoc='';f.style.display='';}
+  if(t){t.style.display='none';t.textContent='';}
+}
+
+async function runCode(){
+  const code=document.getElementById('code-editor').value.trim();
+  if(!code) return;
+  const btn=document.getElementById('run-btn');
+  if(btn){btn.disabled=true;btn.textContent='Running...';}
+  const t0=Date.now();
+  try {
+    if(currentLang==='html') runHTML(code);
+    else if(currentLang==='css') runCSS(code);
+    else if(currentLang==='js') runJS(code);
+    else if(currentLang==='python') await runPython(code);
+    else if(currentLang==='go') await runGo(code);
+    else if(currentLang==='sql') await runSQL(code);
+  } finally {
+    if(btn){btn.disabled=false;btn.textContent='Run';}
+    const te=document.getElementById('output-time');
+    if(te) te.textContent = `${Date.now()-t0}ms`;
+  }
+}
+
+function showFrame(){
+  const f=document.getElementById('output-frame');
+  const t=document.getElementById('output-text');
+  if(f) f.style.display='';
+  if(t) t.style.display='none';
+}
+function showText(txt, isErr=false){
+  const f=document.getElementById('output-frame');
+  const t=document.getElementById('output-text');
+  if(f) f.style.display='none';
+  if(t){
+    t.style.display='';
+    t.style.color = isErr ? '#ff6b6b' : '#00d4aa';
+    t.textContent = txt;
+  }
+}
+
+function runHTML(code){ showFrame(); document.getElementById('output-frame').srcdoc=code; }
+function runCSS(code){
+  showFrame();
+  document.getElementById('output-frame').srcdoc=
+    `<html><head><style>body{margin:0}${code}</style></head><body><div class="box"></div></body></html>`;
+}
+function runJS(code){
+  showFrame();
+  const safe = code.replace(/\\/g,'\\\\').replace(/`/g,'\\`');
+  document.getElementById('output-frame').srcdoc=`<!DOCTYPE html>
+<html><head><style>
+body{margin:0;background:#0a0a14;color:#a9b7d0;font-family:'Courier New',monospace;font-size:13px;padding:1.2rem;white-space:pre-wrap;line-height:1.7}
+.err{color:#ff6b6b}
+
+/* ARTICLE VIEW */
+.article-view{max-width:760px;margin:0 auto;padding:2rem}
+.article-view-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.article-view-title{font-family:var(--display);font-size:1.9rem;font-weight:800;line-height:1.2;margin:1rem 0}
+.article-view-meta{display:flex;gap:1.5rem;font-size:.82rem;color:var(--muted)}
+.article-view-body{font-size:.94rem;line-height:1.9}
+.article-view-body h2{font-family:var(--display);font-size:1.25rem;font-weight:700;margin:2rem 0 .7rem;color:var(--accent)}
+.article-view-body h3{font-family:var(--display);font-size:1.05rem;font-weight:700;margin:1.4rem 0 .5rem}
+.article-view-body p{margin-bottom:.9rem;color:var(--text)}
+.article-view-body pre{background:#0d0d1e;border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;overflow-x:auto;margin:1rem 0;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#a9b7d0}
+.article-view-body code{background:rgba(108,99,255,.12);color:var(--accent);padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:.86em}
+.article-view-body pre code{background:none;color:#a9b7d0;padding:0}
+.back-btn{background:var(--border);color:var(--muted);border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:var(--sans);font-size:.84rem;margin-bottom:1.4rem;transition:all .2s}
+.back-btn:hover{color:var(--text);background:var(--bg3)}
+/* PILL TABS */
+.pill-tabs{display:flex;gap:.4rem;flex-wrap:wrap}
+.pill-tab{background:var(--border);color:var(--muted);border:none;padding:6px 17px;border-radius:7px;cursor:pointer;font-family:var(--mono);font-size:.78rem;transition:all .2s}
+.pill-tab:hover{color:var(--text)}.pill-tab.active{background:var(--accent);color:#fff}
+/* TAG FILTER */
+.tag-filter-btn{background:var(--border);color:var(--muted);border:none;padding:5px 13px;border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:.77rem;transition:all .2s}
+.tag-filter-btn:hover,.tag-filter-btn.active{background:var(--accent);color:#fff}
+/* EBOOK cover */
+.ebook-cover-letter{font-family:var(--display);font-size:3rem;font-weight:800;opacity:.65}
+.ebook-actions{display:flex;gap:6px;margin-top:9px}
+.eb-btn{flex:1;background:var(--accent);color:#fff;border:none;padding:7px;border-radius:7px;cursor:pointer;font-size:.8rem;font-family:var(--sans);transition:all .2s}
+.eb-btn:hover{background:#5a52e0}.eb-btn.secondary{background:var(--border);color:var(--text)}.eb-btn.secondary:hover{background:var(--bg3)}
+/* LB avatar */
+.lb-avatar{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.95rem;font-weight:800;flex-shrink:0;color:#fff}
+/* Profile avatar */
+.profile-avatar-big{width:76px;height:76px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.7rem;font-weight:800;flex-shrink:0;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+/* action btn */
+.action-btn{background:rgba(108,99,255,.1);color:var(--accent);border:none;padding:5px 11px;border-radius:6px;font-size:.76rem;cursor:pointer;font-family:var(--sans);transition:all .2s;margin-right:4px}
+.action-btn:hover{background:rgba(108,99,255,.2)}
+/* toast err */
+.toast.err{background:var(--accent3);color:#fff}
+/* feature card icon */
+.fc-icon{width:34px;height:34px;border-radius:7px;background:rgba(108,99,255,.14);display:flex;align-items:center;justify-content:center;margin-bottom:.7rem}
+.fc-icon svg{width:17px;height:17px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* playground note */
+#note-label{font-size:.7rem;color:var(--accent2)}
+#py-status{font-size:.7rem;color:var(--accent4);font-family:var(--mono)}
+.run-btn:disabled{opacity:.5;cursor:not-allowed}
+/* upload */
+.upload-title{font-size:.9rem;color:var(--muted);margin-top:.5rem}.upload-title strong{color:var(--accent)}
+</style></head><body><div id="out"></div><script>
+const _l=[];const _c=console.log.bind(console);
+console.log=(...a)=>{_l.push(a.map(x=>typeof x==='object'?JSON.stringify(x,null,2):String(x)).join(' '));_c(...a)};
+window.onerror=(m)=>{document.getElementById('out').innerHTML='<span class="err">Error: '+m+'</span>';return true};
+try{
+${code}
+setTimeout(()=>{if(_l.length)document.getElementById('out').textContent=_l.join('\\n')},80);
+}catch(e){document.getElementById('out').innerHTML='<span class="err">'+e+'</span>'}
+<\/script></body></html>`;
+}
+
+async function runPython(code){
+  if(!pyodide){
+    showText('[กำลังโหลด Pyodide... รอสักครู่]');
+    await initPyodide();
+    if(!pyodide){ showText('ไม่สามารถโหลด Pyodide ได้\nลองโหลดหน้าใหม่', true); return; }
+  }
+  const lines=[];
+  pyodide.setStdout({batched: s=>lines.push(s)});
+  pyodide.setStderr({batched: s=>lines.push('Stderr: '+s)});
+  try {
+    await pyodide.runPythonAsync(code);
+    showText(lines.join('\n') || '(ไม่มี output)');
+  } catch(e) {
+    showText(String(e), true);
+  }
+}
+
+async function runGo(code){
+  showText('กำลังส่งไป Go Playground API...');
+  const endpoints = [
+    { url:'https://go.dev/_/compile?version=2', method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: ()=>'version=2&body='+encodeURIComponent(code),
+      parse: async r=>{ const d=await r.json(); return d.Errors ? {err:d.Errors} : {out:(d.Events||[]).map(e=>e.Message).join('')}; }
+    },
+    { url:'https://play.golang.org/compile', method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: ()=>JSON.stringify({version:2,body:code}),
+      parse: async r=>{ const d=await r.json(); return d.Errors ? {err:d.Errors} : {out:(d.Events||[]).map(e=>e.Message).join('')}; }
+    }
+  ];
+  for(const ep of endpoints){
+    try {
+      const res = await fetch(ep.url,{method:ep.method,headers:ep.headers,body:ep.body()});
+      if(!res.ok) continue;
+      const result = await ep.parse(res);
+      if(result.err) showText(result.err, true);
+      else showText(result.out || '(ไม่มี output)');
+      return;
+    } catch(e) { continue; }
+  }
+  showText(
+    'ไม่สามารถเชื่อมต่อ Go Playground ได้\n'+
+    '(เบราว์เซอร์บางตัวบล็อก CORS จาก go.dev)\n\n'+
+    'ลองรันที่: https://play.golang.org\n'+
+    'หรือใช้ Go ใน Terminal: go run main.go', true);
+}
+
+async function runSQL(code){
+  if(!sqlDB){
+    showText('[กำลังโหลด sql.js...]');
+    await initSQL();
+    if(!sqlDB){ showText('ไม่สามารถโหลด sql.js ได้', true); return; }
+  }
+  // Fresh DB each run
+  try {
+    const SQL = await initSqlJs({
+      locateFile: f=>`https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${f}`
+    });
+    sqlDB = new SQL.Database();
+  } catch(e){}
+
+  const output=[];
+  const stmts = code.split(';')
+    .map(s=>s.replace(/--[^\n]*/g,'').trim())
+    .filter(s=>s.length>0);
+
+  for(const stmt of stmts){
+    try {
+      const res = sqlDB.exec(stmt);
+      if(res.length>0){
+        for(const r of res){
+          const widths = r.columns.map((c,i)=>Math.max(c.length, ...r.values.map(row=>String(row[i]??'NULL').length)));
+          const pad=(s,w)=>String(s??'NULL').padEnd(w);
+          const sep = widths.map(w=>'-'.repeat(w)).join('-+-');
+          output.push(r.columns.map((c,i)=>pad(c,widths[i])).join(' | '));
+          output.push(sep);
+          r.values.forEach(row=>output.push(row.map((v,i)=>pad(v,widths[i])).join(' | ')));
+          output.push(`(${r.values.length} row${r.values.length===1?'':'s'})`);
+          output.push('');
+        }
+      } else {
+        output.push(stmt.trim().split(/\s+/)[0].toUpperCase()+' OK');
+      }
+    } catch(e){
+      output.push('Error: '+e.message);
+    }
+  }
+  showText(output.join('\n') || '(ไม่มี output)');
+}
+
+// ============================================================
+// EBOOKS
+// ============================================================
+function renderEbooks(filter=''){
+  const filtered=EBOOKS.filter(e=>
+    e.title.toLowerCase().includes(filter.toLowerCase())||
+    e.tag.toLowerCase().includes(filter.toLowerCase())
+  );
+  document.getElementById('ebook-grid').innerHTML=filtered.map(e=>`
+    <div class="ebook-card">
+      <div class="ebook-cover" style="background:${e.bg}">
+        <span class="ebook-cover-letter" style="color:${e.ac}">${e.letter}</span>
+      </div>
+      <div class="ebook-info">
+        <div class="ebook-title">${e.title}</div>
+        <div class="ebook-meta">${e.author}</div>
+        <span class="ebook-tag" style="background:${e.bg};color:${e.ac}">${e.tag}</span>
+        <div class="ebook-actions">
+          <button class="eb-btn" onclick="readEbook(${e.id})">อ่าน</button>
+          <button class="eb-btn secondary" onclick="showToast('ดาวน์โหลด...')">DL</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function filterEbooks(v){ renderEbooks(v); }
+function readEbook(id){ showToast('ต้องการไฟล์ PDF จาก Admin'); }
+
+// ============================================================
+// ARTICLES — full read/write system
+// ============================================================
+function renderArticles(tagFilter){
+  if(tagFilter!==undefined) currentTagFilter=tagFilter;
+  const tags=[...new Set(ARTICLES.map(a=>a.tag))];
+  document.getElementById('tag-filters').innerHTML=
+    `<button class="tag-filter-btn ${!currentTagFilter?'active':''}" onclick="renderArticles('')">ทั้งหมด</button>`+
+    tags.map(t=>`<button class="tag-filter-btn ${currentTagFilter===t?'active':''}" onclick="renderArticles('${t}')">${t}</button>`).join('');
+  const list=currentTagFilter?ARTICLES.filter(a=>a.tag===currentTagFilter):ARTICLES;
+  document.getElementById('article-grid').innerHTML=list.map(a=>`
+    <div class="article-card" onclick="viewArticle(${a.id})">
+      <span class="article-tag" style="background:${a.tagColor};color:${a.tagText}">${a.tag}</span>
+      <h3>${a.title}</h3>
+      <p>${a.summary}</p>
+      <div class="article-footer">
+        <span>${a.author}</span>
+        <span>${a.readTime} · ${a.date}</span>
+      </div>
+    </div>`).join('');
+}
+
+function viewArticle(id){
+  const a=ARTICLES.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('article-view-content').innerHTML=`
+    <button class="back-btn" onclick="showPage('articles')">Back to Articles</button>
+    <div class="article-view-header">
+      <span class="article-tag" style="background:${a.tagColor};color:${a.tagText};margin-bottom:.8rem;display:inline-block">${a.tag}</span>
+      <div class="article-view-title">${a.title}</div>
+      <div class="article-view-meta">
+        <span>${a.author}</span><span>${a.date}</span><span>${a.readTime} read</span>
+      </div>
+    </div>
+    <div class="article-view-body">${parseMarkdown(a.body||'<p>ยังไม่มีเนื้อหา</p>')}</div>`;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('article-view-page').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function parseMarkdown(md){
+  // code blocks first
+  let html = md.replace(/```([\s\S]*?)```/g, (_,c)=>`<pre><code>${escHtml(c.trim())}</code></pre>`);
+  html = html.replace(/`([^`]+)`/g, (_,c)=>`<code>${escHtml(c)}</code>`);
+  html = html.replace(/^## (.+)$/gm, (_,t)=>`<h2>${t}</h2>`);
+  html = html.replace(/^### (.+)$/gm, (_,t)=>`<h3>${t}</h3>`);
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // paragraphs: split by blank line
+  const blocks = html.split(/\n\n+/);
+  return blocks.map(block => {
+    block = block.trim();
+    if(!block) return '';
+    if(block.startsWith('<h') || block.startsWith('<pre')) return block;
+    return '<p>' + block.replace(/\n/g,' ') + '</p>';
+  }).join('\n');
+}
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ============================================================
+// ROADMAP
+// ============================================================
+function renderRoadmap(){
+  const tabs=Object.keys(ROADMAPS);
+  document.getElementById('roadmap-tabs').innerHTML=tabs.map(t=>
+    `<button class="pill-tab ${currentRoadmap===t?'active':''}" onclick="switchRoadmap('${t}')">${t}</button>`).join('');
+  document.getElementById('roadmap-content').innerHTML=`<div class="roadmap-path">
+    ${ROADMAPS[currentRoadmap].map(item=>`
+      <div class="roadmap-item ${item.status}">
+        <div class="roadmap-dot"></div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.4rem">
+          <div>
+            <div class="roadmap-title">${item.title}</div>
+            <div class="roadmap-desc">${item.desc}</div>
+            <div class="roadmap-tags">${item.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+          </div>
+          <span class="status-badge ${item.status==='done'?'status-active':item.status==='active'?'status-draft':''}"
+            style="${!item.status?'background:rgba(80,80,100,.15);color:var(--muted)':''}">
+            ${item.status==='done'?'สำเร็จ':item.status==='active'?'กำลังเรียน':'ยังไม่เริ่ม'}
+          </span>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+function switchRoadmap(name){ currentRoadmap=name; renderRoadmap(); }
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+function renderLeaderboard(){
+  const cls=r=>r===1?'gold':r===2?'silver':r===3?'bronze':'';
+  document.getElementById('leaderboard-list').innerHTML=LEADERBOARD.map(p=>`
+    <div class="lb-item">
+      <div class="lb-rank ${cls(p.rank)}">${p.rank<=3?['1st','2nd','3rd'][p.rank-1]:p.rank}</div>
+      <div class="lb-avatar" style="background:${p.bg}">${p.initials}</div>
+      <div class="lb-info"><div class="lb-name">${p.name}</div><div class="lb-username">${p.username}</div></div>
+      <div style="text-align:right">
+        <div class="lb-score">${p.points.toLocaleString()}</div>
+        <div class="lb-badge">${p.badge}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+function renderProfile(){
+  if(!currentUser){ showPage('home'); openLogin(); return; }
+  const u=currentUser;
+  document.getElementById('profile-content').innerHTML=`
+    <div class="profile-header">
+      <div class="profile-avatar-big">${u.initials}</div>
+      <div>
+        <div class="profile-name">${u.name}</div>
+        <div class="profile-username">@${u.username} — ${u.role==='admin'?'Admin':'Member'}</div>
+        <div class="profile-bio">${u.bio}</div>
+        <div class="profile-stats">
+          <div class="ps"><div class="ps-num">${u.points.toLocaleString()}</div><div class="ps-lbl">คะแนน</div></div>
+          <div class="ps"><div class="ps-num">12</div><div class="ps-lbl">บทเรียน</div></div>
+          <div class="ps"><div class="ps-num">3</div><div class="ps-lbl">Streak</div></div>
+        </div>
+        <div class="badges-wrap">
+          <span class="badge">Early Adopter</span>
+          <span class="badge">Coder</span>
+          ${u.role==='admin'?'<span class="badge">Admin</span>':''}
+        </div>
+      </div>
+    </div>
+    <div class="progress-list">
+      <h3>ความก้าวหน้า</h3>
+      ${[['HTML & CSS',80],['JavaScript',65],['Python',45],['Go',30]].map(([n,pct])=>`
+        <div class="progress-item">
+          <div class="progress-label"><span>${n}</span><span>${pct}%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ============================================================
+// ADMIN
+// ============================================================
+function adminTab(tab,el){
+  document.querySelectorAll('.admin-menu-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderAdmin(tab);
+}
+
+function renderAdmin(tab){
+  if(!currentUser||currentUser.role!=='admin'){ showPage('home'); return; }
+  const c=document.getElementById('admin-content');
+  if(tab==='dashboard'){
+    c.innerHTML=`
+      <h2 style="font-family:var(--display);font-weight:800;margin-bottom:1.4rem">Dashboard</h2>
+      <div class="admin-stats">
+        <div class="stat-card"><div class="num" style="color:var(--accent)">${USERS.length}</div><div class="lbl">สมาชิก</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--accent2)">${EBOOKS.length}</div><div class="lbl">E-Books</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--accent3)">${ARTICLES.length}</div><div class="lbl">บทความ</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--accent4)">5</div><div class="lbl">ภาษา</div></div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>User</th><th>Role</th><th>Points</th><th>Status</th></tr></thead>
+        <tbody>${USERS.map(u=>`<tr>
+          <td>${u.name}<br><span style="color:var(--muted);font-size:.76rem;font-family:var(--mono)">@${u.username}</span></td>
+          <td><span class="status-badge ${u.role==='admin'?'status-active':'status-draft'}">${u.role}</span></td>
+          <td style="font-family:var(--mono)">${u.points.toLocaleString()}</td>
+          <td><span class="status-badge status-active">Active</span></td>
+        </tr>`).join('')}</tbody>
+      </table></div>`;
+  } else if(tab==='upload'){
+    c.innerHTML=`
+      <h2 style="font-family:var(--display);font-weight:800;margin-bottom:1.4rem">อัพโหลด E-Book</h2>
+      <div class="upload-zone" onclick="document.getElementById('pdf-input').click()">
+        <div style="font-size:2.5rem;margin-bottom:.5rem;color:var(--muted)">PDF</div>
+        <p class="upload-title"><strong>คลิกเพื่อเลือกไฟล์ PDF</strong> หรือลากวางที่นี่</p>
+        <p style="font-size:.76rem;color:var(--muted);margin-top:6px">รองรับ .pdf ขนาดสูงสุด 50MB</p>
+        <input type="file" id="pdf-input" class="file-input" accept=".pdf" onchange="handlePdfUpload(this)">
+      </div>
+      <div id="upload-form" style="display:none;margin-top:1.3rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div class="form-group"><label>ชื่อหนังสือ</label><input type="text" id="ebook-title-input" placeholder="ชื่อ E-Book"></div>
+          <div class="form-group"><label>ผู้แต่ง</label><input type="text" id="ebook-author-input" placeholder="ชื่อผู้แต่ง"></div>
+        </div>
+        <div class="form-group"><label>หมวดหมู่</label><input type="text" id="ebook-tag-input" placeholder="JavaScript, Python..."></div>
+        <button class="btn btn-primary" onclick="saveEbook()">บันทึก E-Book</button>
+      </div>
+      <div class="table-wrap" style="margin-top:1.3rem"><table>
+        <thead><tr><th>E-Book</th><th>ผู้แต่ง</th><th>Tag</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+        <tbody id="ebook-admin-list">${EBOOKS.map(e=>`
+          <tr id="ebook-row-${e.id}">
+            <td>${e.title}</td>
+            <td style="color:var(--muted)">${e.author}</td>
+            <td><span class="status-badge" style="background:${e.bg};color:${e.ac}">${e.tag}</span></td>
+            <td><span class="status-badge status-active">เผยแพร่</span></td>
+            <td><button class="delete-btn" onclick="deleteEbook(${e.id})">ลบ</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`;
+  } else if(tab==='articles'){
+    articleEditId=null;
+    c.innerHTML=`
+      <h2 style="font-family:var(--display);font-weight:800;margin-bottom:1.4rem">จัดการบทความ</h2>
+      <button class="btn btn-primary" onclick="showArticleEditor()" style="margin-bottom:1.4rem">+ เพิ่มบทความใหม่</button>
+      <div id="article-editor-wrap"></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ชื่อบทความ</th><th>Tag</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+        <tbody id="article-admin-list">${renderArticleRows()}</tbody>
+      </table></div>`;
+  } else if(tab==='users'){
+    c.innerHTML=`
+      <h2 style="font-family:var(--display);font-weight:800;margin-bottom:1.4rem">จัดการสมาชิก</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>สมาชิก</th><th>Username</th><th>Role</th><th>Points</th><th>จัดการ</th></tr></thead>
+        <tbody>${USERS.map(u=>`<tr>
+          <td>${u.name}</td>
+          <td style="font-family:var(--mono);color:var(--muted)">@${u.username}</td>
+          <td><span class="status-badge ${u.role==='admin'?'status-active':'status-draft'}">${u.role}</span></td>
+          <td style="font-family:var(--mono)">${u.points.toLocaleString()}</td>
+          <td><button class="action-btn" onclick="showToast('แก้ไขข้อมูล')">แก้ไข</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div>`;
+  } else if(tab==='settings'){
+    c.innerHTML=`
+      <h2 style="font-family:var(--display);font-weight:800;margin-bottom:1.4rem">ตั้งค่าระบบ</h2>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;max-width:480px">
+        <div class="form-group"><label>ชื่อเว็บไซต์</label><input type="text" value="DevAcademy"></div>
+        <div class="form-group"><label>คำอธิบาย</label><input type="text" value="แพลตฟอร์มเรียนรู้สำหรับนักพัฒนาไทย"></div>
+        <div class="form-group"><label>อีเมลผู้ดูแล</label><input type="text" value="admin@devacademy.th"></div>
+        <button class="btn btn-primary" onclick="showToast('บันทึกแล้ว')">บันทึก</button>
+      </div>`;
+  }
+}
+
+function renderArticleRows(){
+  return ARTICLES.map(a=>`
+    <tr id="article-row-${a.id}">
+      <td style="max-width:280px">${a.title}</td>
+      <td><span class="status-badge" style="background:${a.tagColor};color:${a.tagText}">${a.tag}</span></td>
+      <td style="color:var(--muted);font-size:.8rem">${a.date}</td>
+      <td><span class="status-badge status-active">เผยแพร่</span></td>
+      <td style="white-space:nowrap">
+        <button class="action-btn" onclick="editArticle(${a.id})">แก้ไข</button>
+        <button class="delete-btn" onclick="deleteArticle(${a.id})">ลบ</button>
+      </td>
+    </tr>`).join('');
+}
+
+const TAG_OPTIONS = [
+  ['Go','rgba(0,173,216,0.15)','#00add8'],
+  ['JavaScript','rgba(108,99,255,0.15)','#6c63ff'],
+  ['Python','rgba(255,217,61,0.15)','#ffd93d'],
+  ['DevOps','rgba(255,107,107,0.15)','#ff6b6b'],
+  ['Next.js','rgba(255,255,255,0.06)','#ccc'],
+  ['Database','rgba(0,212,170,0.15)','#00d4aa'],
+  ['System Design','rgba(167,139,250,0.15)','#a78bfa'],
+  ['Git','rgba(255,217,61,0.15)','#ffd93d'],
+  ['Other','rgba(100,100,120,0.15)','#888']
+];
+
+function showArticleEditor(prefill){
+  const p=prefill||{title:'',tag:'Go',summary:'',body:'',readTime:'5 min',tagColor:'rgba(0,173,216,0.15)',tagText:'#00add8'};
+  document.getElementById('article-editor-wrap').innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1.4rem">
+      <h3 style="font-family:var(--display);font-weight:700;margin-bottom:1.1rem">${articleEditId?'แก้ไขบทความ':'เพิ่มบทความใหม่'}</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="form-group"><label>ชื่อบทความ</label><input type="text" id="ae-title" value="${escHtml(p.title)}" placeholder="ชื่อบทความ"></div>
+        <div class="form-group"><label>Tag</label>
+          <select id="ae-tag" onchange="onTagChange(this)" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 13px;border-radius:9px;font-size:.88rem;font-family:var(--sans);outline:none">
+            ${TAG_OPTIONS.map(([t,bg,c])=>`<option value="${t}" data-bg="${bg}" data-color="${c}" ${p.tag===t?'selected':''}>${t}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 120px;gap:1rem;margin-bottom:1rem">
+        <div class="form-group"><label>สรุปย่อ</label><input type="text" id="ae-summary" value="${escHtml(p.summary)}" placeholder="สรุปสั้น ๆ ของบทความ"></div>
+        <div class="form-group"><label>เวลาอ่าน</label><input type="text" id="ae-readtime" value="${p.readTime}" placeholder="5 min"></div>
+      </div>
+      <div class="form-group">
+        <label>เนื้อหา (รองรับ Markdown)</label>
+        <textarea id="ae-body" style="min-height:240px;width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 13px;border-radius:9px;font-size:12.5px;font-family:var(--mono);outline:none;resize:vertical;line-height:1.7">${escHtml(p.body)}</textarea>
+      </div>
+      <input type="hidden" id="ae-tagcolor" value="${p.tagColor}">
+      <input type="hidden" id="ae-tagtext" value="${p.tagText}">
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="saveArticle()">บันทึก</button>
+        <button class="btn btn-outline" onclick="cancelArticleEdit()">ยกเลิก</button>
+      </div>
+    </div>`;
+}
+
+function onTagChange(sel){
+  const opt=sel.options[sel.selectedIndex];
+  document.getElementById('ae-tagcolor').value=opt.dataset.bg;
+  document.getElementById('ae-tagtext').value=opt.dataset.color;
+}
+function cancelArticleEdit(){ articleEditId=null; document.getElementById('article-editor-wrap').innerHTML=''; }
+
+function editArticle(id){
+  articleEditId=id;
+  const a=ARTICLES.find(x=>x.id===id);
+  if(!a) return;
+  showArticleEditor(a);
+  document.getElementById('article-editor-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+function saveArticle(){
+  const title=document.getElementById('ae-title').value.trim();
+  const tag=document.getElementById('ae-tag').value;
+  const summary=document.getElementById('ae-summary').value.trim();
+  const body=document.getElementById('ae-body').value;
+  const readTime=document.getElementById('ae-readtime').value||'5 min';
+  const tagColor=document.getElementById('ae-tagcolor').value;
+  const tagText=document.getElementById('ae-tagtext').value;
+  if(!title){ showToast('กรุณาใส่ชื่อบทความ','err'); return; }
+  const today=new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});
+  if(articleEditId){
+    const idx=ARTICLES.findIndex(a=>a.id===articleEditId);
+    if(idx>-1) ARTICLES[idx]={...ARTICLES[idx],title,tag,summary,body,readTime,tagColor,tagText};
+    showToast('อัพเดตบทความแล้ว');
+  } else {
+    ARTICLES.unshift({id:Date.now(),title,tag,summary,body,readTime,tagColor,tagText,author:'Admin Dev',date:today});
+    showToast('เพิ่มบทความแล้ว');
+  }
+  articleEditId=null;
+  document.getElementById('article-editor-wrap').innerHTML='';
+  const list=document.getElementById('article-admin-list');
+  if(list) list.innerHTML=renderArticleRows();
+}
+
+function deleteArticle(id){
+  if(!confirm('ยืนยันลบบทความ?')) return;
+  ARTICLES=ARTICLES.filter(a=>a.id!==id);
+  const row=document.getElementById('article-row-'+id);
+  if(row) row.remove();
+  showToast('ลบบทความแล้ว');
+}
+
+function handlePdfUpload(input){
+  if(input.files.length>0){
+    const f=input.files[0];
+    document.getElementById('upload-form').style.display='block';
+    document.getElementById('ebook-title-input').value=f.name.replace(/\.pdf$/i,'');
+    showToast('เลือกไฟล์: '+f.name);
+  }
+}
+function saveEbook(){
+  const title=document.getElementById('ebook-title-input').value.trim();
+  const author=document.getElementById('ebook-author-input').value.trim();
+  const tag=document.getElementById('ebook-tag-input').value.trim()||'General';
+  if(!title){ showToast('กรุณาใส่ชื่อหนังสือ','err'); return; }
+  const palette=[['#6c63ff','rgba(108,99,255,0.15)'],['#00d4aa','rgba(0,212,170,0.15)'],['#ffd93d','rgba(255,217,61,0.15)'],['#ff6b6b','rgba(255,107,107,0.15)']];
+  const [ac,bg]=palette[Math.floor(Math.random()*palette.length)];
+  const eb={id:Date.now(),title,author:author||'ไม่ระบุ',ac,bg,tag,letter:tag.slice(0,2).toUpperCase()};
+  EBOOKS.unshift(eb);
+  const tbody=document.getElementById('ebook-admin-list');
+  if(tbody){
+    const tr=document.createElement('tr');
+    tr.id='ebook-row-'+eb.id;
+    tr.innerHTML=`<td>${eb.title}</td><td style="color:var(--muted)">${eb.author}</td>
+      <td><span class="status-badge status-active">${eb.tag}</span></td>
+      <td><span class="status-badge status-active">เผยแพร่</span></td>
+      <td><button class="delete-btn" onclick="deleteEbook(${eb.id})">ลบ</button></td>`;
+    tbody.insertBefore(tr,tbody.firstChild);
+  }
+  document.getElementById('upload-form').style.display='none';
+  showToast('เพิ่ม "'+eb.title+'" แล้ว');
+}
+function deleteEbook(id){
+  EBOOKS=EBOOKS.filter(e=>e.id!==id);
+  const row=document.getElementById('ebook-row-'+id);
+  if(row) row.remove();
+  showToast('ลบ E-Book แล้ว');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(type==='err'?' err':'');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderArticles();
+initSQL();
+document.getElementById('login-modal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+</script>
+
+</body>
+</html>
