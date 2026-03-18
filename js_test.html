@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced JavaScript Execution Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        textarea { width: 100%; height: 200px; font-family: monospace; margin: 10px 0; }
+        button { background: #007acc; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+        iframe { width: 100%; height: 400px; border: 1px solid #ddd; border-radius: 4px; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Enhanced JavaScript Execution Test</h1>
+        
+        <div class="info">
+            <h3>✨ New Features:</h3>
+            <ul>
+                <li>📝 Real console.log() capture</li>
+                <li>🎨 Color-coded output (log/error/warn/info)</li>
+                <li>📊 Object and array pretty-printing</li>
+                <li>🔢 Line numbers for debugging</li>
+                <li>⚡ Return value display</li>
+                <li>🛡️ Enhanced error handling</li>
+            </ul>
+        </div>
+        
+        <textarea id="code" placeholder="Enter JavaScript code here...">// Test enhanced JavaScript execution
+console.log('🚀 Starting test...');
+
+// Array operations
+const numbers = [1, 2, 3, 4, 5];
+console.log('Original array:', numbers);
+
+const doubled = numbers.map(n => n * 2);
+console.log('Doubled array:', doubled);
+
+// Object example
+const user = {
+  name: 'DevAcademy',
+  version: '2.0',
+  features: ['Python', 'JavaScript', 'Enhanced Logging']
+};
+console.log('User object:', user);
+
+// Error handling
+try {
+  const result = Math.floor(Math.random() * 100);
+  console.info('Random result:', result);
+  
+  if (result > 80) {
+    console.warn('High value detected!');
+  }
+} catch (e) {
+  console.error('Error:', e.message);
+}
+
+console.log('✅ Test completed!');
+
+// Return value example
+return 'Success!';</textarea>
+        
+        <button onclick="runJS()">▶ Run Enhanced JavaScript</button>
+        
+        <h3>Output:</h3>
+        <iframe id="output"></iframe>
+    </div>
+
+    <script>
+        function runJS() {
+            const code = document.getElementById('code').value;
+            const output = document.getElementById('output');
+            
+            output.srcdoc = `<html><head><style>
+              body { background:#0a0a1a;color:#e8e8f0;font-family:monospace;padding:1rem;margin:0; }
+              #output { white-space:pre-wrap; }
+              .log { margin:2px 0; }
+              .log-number { color:#6c63ff; }
+              .log-string { color:#00d4aa; }
+              .log-error { color:#ff6b6b; }
+              .log-info { color:#ffd93d; }
+              .result { margin-top:1rem;padding:1rem;background:#141428;border-radius:8px; }
+            </style></head><body>
+              <div id="output"></div>
+              <div id="result"></div>
+              <script>
+                // Capture console methods
+                const originalLog = console.log;
+                const originalError = console.error;
+                const originalWarn = console.warn;
+                const originalInfo = console.info;
+                const output = document.getElementById('output');
+                let logCount = 0;
+                
+                function formatLog(args, type = 'log') {
+                  logCount++;
+                  let message = args.map(arg => {
+                    if (typeof arg === 'string') return arg;
+                    if (typeof arg === 'object') return JSON.stringify(arg, null, 2);
+                    return String(arg);
+                  }).join(' ');
+                  
+                  const className = type === 'error' ? 'log-error' : type === 'warn' ? 'log-info' : type === 'info' ? 'log-info' : 'log-string';
+                  return \`<div class="log \${className}"><span class="log-number">[\${logCount}]</span> \${message}</div>\`;
+                }
+                
+                console.log = function(...args) {
+                  output.innerHTML += formatLog(args, 'log');
+                  originalLog.apply(console, args);
+                };
+                
+                console.error = function(...args) {
+                  output.innerHTML += formatLog(args, 'error');
+                  originalError.apply(console, args);
+                };
+                
+                console.warn = function(...args) {
+                  output.innerHTML += formatLog(args, 'warn');
+                  originalWarn.apply(console, args);
+                };
+                
+                console.info = function(...args) {
+                  output.innerHTML += formatLog(args, 'info');
+                  originalInfo.apply(console, args);
+                };
+                
+                try {
+                  // Execute user code and capture return value
+                  let lastResult = (function() {
+                    ${code}
+                  })();
+                  
+                  if (lastResult !== undefined) {
+                    document.getElementById('result').innerHTML = 
+                      '<div class="result"><strong>Return Value:</strong><br>' + 
+                      (typeof lastResult === 'object' ? JSON.stringify(lastResult, null, 2) : lastResult) + 
+                      '</div>';
+                  }
+                } catch (e) {
+                  document.getElementById('result').innerHTML = 
+                    '<div class="result"><span style="color:#ff6b6b">Uncaught Error: ' + e.message + '</span></div>';
+                }
+              <\/script></body></html>`;
+        }
+        
+        // Auto-run on load
+        window.addEventListener('load', runJS);
+    </script>
+</body>
+</html>
