@@ -841,23 +841,44 @@ body {
   50% { transform: rotate(180deg) scale(1.2); }
   to { transform: rotate(360deg) scale(1); }
 }`,
-  js: `// JavaScript ใน HTML
-const output = document.getElementById('result');
+  js: `// JavaScript Demo - Console Logging Test
+console.log('🚀 Starting JavaScript execution...');
 
-// ทดสอบ Array methods
+// Test different data types
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+console.log('Numbers array:', numbers);
 
-const result = numbers
-  .filter(n => n % 2 === 0)
-  .map(n => n * n)
-  .reduce((sum, n) => sum + n, 0);
+// Array operations
+const evenNumbers = numbers.filter(n => n % 2 === 0);
+console.log('Even numbers:', evenNumbers);
 
-output.innerHTML = \`
-  <h2 style="color:#6c63ff">JavaScript Demo</h2>
-  <p>เลขคู่: \${numbers.filter(n=>n%2===0).join(', ')}</p>
-  <p>ยกกำลังสอง: \${numbers.filter(n=>n%2===0).map(n=>n*n).join(', ')}</p>
-  <p>ผลรวม: <strong>\${result}</strong></p>
-\`;`,
+const squares = evenNumbers.map(n => n * n);
+console.log('Squares:', squares);
+
+const sum = squares.reduce((total, n) => total + n, 0);
+console.log('Sum of squares:', sum);
+
+// Object example
+const person = {
+  name: 'DevAcademy',
+  role: 'Learning Platform',
+  features: ['Python', 'JavaScript', 'HTML', 'CSS']
+};
+console.log('Person object:', person);
+
+// Error handling test
+try {
+  const result = Math.random() * 100;
+  console.info('Random number generated:', result);
+  
+  if (result > 50) {
+    console.warn('High random number detected!');
+  }
+} catch (error) {
+  console.error('Something went wrong:', error);
+}
+
+console.log('✅ JavaScript execution completed!');`,
   python: `# Python Demo
 def fibonacci(n):
     """คำนวณ Fibonacci sequence"""
@@ -1075,8 +1096,87 @@ function runCode() {
     frame.srcdoc = `<html><head><style>${code}</style></head><body><div class="box"></div></body></html>`;
   } else if(currentLang === 'js') {
     frame.style.display = ''; outText.style.display = 'none';
-    frame.srcdoc = `<html><body style="background:#0a0a1a;color:#e8e8f0;font-family:sans-serif;padding:1rem">
-      <div id="result"></div><script>try{${code}}catch(e){document.getElementById('result').innerHTML='<span style="color:#ff6b6b">Error: '+e.message+'</span>'}<\/script></body></html>`;
+    frame.srcdoc = `<html><head><style>
+      body { background:#0a0a1a;color:#e8e8f0;font-family:monospace;padding:1rem;margin:0; }
+      #output { white-space:pre-wrap; }
+      .log { margin:2px 0; }
+      .log-number { color:#6c63ff; }
+      .log-string { color:#00d4aa; }
+      .log-error { color:#ff6b6b; }
+      .log-info { color:#ffd93d; }
+      .result { margin-top:1rem;padding:1rem;background:#141428;border-radius:8px; }
+    </style></head><body>
+      <div id="output"></div>
+      <div id="result"></div>
+      <script>
+        // Capture console.log and other console methods
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const originalInfo = console.info;
+        const output = document.getElementById('output');
+        let logCount = 0;
+        
+        function formatLog(args, type = 'log') {
+          logCount++;
+          let message = args.map(arg => {
+            if (typeof arg === 'string') return arg;
+            if (typeof arg === 'object') return JSON.stringify(arg, null, 2);
+            return String(arg);
+          }).join(' ');
+          
+          const className = type === 'error' ? 'log-error' : type === 'warn' ? 'log-info' : type === 'info' ? 'log-info' : 'log-string';
+          return \`<div class="log \${className}"><span class="log-number">[\${logCount}]</span> \${message}</div>\`;
+        }
+        
+        console.log = function(...args) {
+          output.innerHTML += formatLog(args, 'log');
+          originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+          output.innerHTML += formatLog(args, 'error');
+          originalError.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+          output.innerHTML += formatLog(args, 'warn');
+          originalWarn.apply(console, args);
+        };
+        
+        console.info = function(...args) {
+          output.innerHTML += formatLog(args, 'info');
+          originalInfo.apply(console, args);
+        };
+        
+        // Capture return values
+        let lastResult = null;
+        const originalEval = window.eval;
+        window.eval = function(code) {
+          try {
+            lastResult = originalEval.call(window, code);
+            if (lastResult !== undefined) {
+              document.getElementById('result').innerHTML = 
+                '<div class="result"><strong>Return Value:</strong><br>' + 
+                (typeof lastResult === 'object' ? JSON.stringify(lastResult, null, 2) : lastResult) + 
+                '</div>';
+            }
+            return lastResult;
+          } catch (e) {
+            document.getElementById('result').innerHTML = 
+              '<div class="result"><span style="color:#ff6b6b">Error: ' + e.message + '</span></div>';
+            throw e;
+          }
+        };
+        
+        try {
+          // Execute user code
+          ${code}
+        } catch (e) {
+          document.getElementById('result').innerHTML = 
+            '<div class="result"><span style="color:#ff6b6b">Uncaught Error: ' + e.message + '</span></div>';
+        }
+      <\/script></body></html>`;
   } else if(currentLang === 'python') {
     // Execute real Python code with Pyodide
     frame.style.display = 'none'; outText.style.display = 'block';
