@@ -1152,8 +1152,14 @@ async function initPyodide(){
   if(st) st.textContent='[โหลด Python...]';
   try {
     pyodide = await loadPyodide();
+    // Install common packages
+    await pyodide.loadPackage(['numpy', 'pandas']);
     if(st && currentLang==='python') st.textContent='[Python ready]';
-  } catch(e) { if(st) st.textContent='[Pyodide unavailable]'; }
+    console.log('Pyodide loaded successfully');
+  } catch(e) { 
+    console.error('Pyodide load error:', e);
+    if(st) st.textContent='[Pyodide unavailable]'; 
+  }
 }
 
 async function initSQL(){
@@ -1171,6 +1177,8 @@ function initPlayground(){
   if(btn){ btn.classList.add('active'); }
   setLang('html', btn);
   initSQL();
+  // Initialize Pyodide in background
+  initPyodide();
 }
 
 function setLang(lang, btn){
@@ -1322,14 +1330,35 @@ async function runPython(code){
     await initPyodide();
     if(!pyodide){ showText('ไม่สามารถโหลด Pyodide ได้\nลองโหลดหน้าใหม่', true); return; }
   }
-  const lines=[];
-  pyodide.setStdout({batched: s=>lines.push(s)});
-  pyodide.setStderr({batched: s=>lines.push('Stderr: '+s)});
   try {
-    await pyodide.runPythonAsync(code);
-    showText(lines.join('\n') || '(ไม่มี output)');
+    // Use the proper stdout capture method
+    pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+`);
+    
+    // Run the user code
+    pyodide.runPython(code);
+    
+    // Get the output
+    const output = pyodide.runPython(`
+output = sys.stdout.getvalue()
+error_output = sys.stderr.getvalue()
+sys.stdout = sys.__stdout__
+sys.stderr = sys.__stderr__
+output, error_output
+`);
+    
+    let result = '';
+    if (output[0]) result += output[0];
+    if (output[1]) result += (result ? '\n' : '') + 'Error: ' + output[1];
+    
+    showText(result || '(ไม่มี output)');
   } catch(e) {
-    showText(String(e), true);
+    console.error('Python execution error:', e);
+    showText('Error: ' + String(e), true);
   }
 }
 

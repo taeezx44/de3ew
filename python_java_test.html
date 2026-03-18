@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python & Java Execution Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .test-section h2 { color: #333; margin-top: 0; }
+        .success { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .info { background: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+        textarea { width: 100%; height: 150px; font-family: monospace; margin: 10px 0; }
+        button { background: #007acc; color: white; padding: 10px 20px; border: none; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .output { background: #2d2d2d; color: #00d4aa; padding: 15px; font-family: monospace; border-radius: 4px; min-height: 100px; white-space: pre-wrap; }
+        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .feature-card { padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; }
+        .feature-card h3 { margin-top: 0; color: #007acc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍☕ Python & Java Execution Test</h1>
+        
+        <div class="test-section info">
+            <h2>✨ Enhanced Features in Dev(2)</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🐍 Python (Pyodide)</h3>
+                    <ul>
+                        <li>✅ Real Python execution</li>
+                        <li>✅ Stdout capture</li>
+                        <li>✅ Error handling</li>
+                        <li>✅ WebAssembly performance</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3>☕ Java (Compiler API)</h3>
+                    <ul>
+                        <li>✅ Real Java compilation</li>
+                        <li>✅ API integration</li>
+                        <li>✅ Fallback simulation</li>
+                        <li>✅ Complete template</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section success">
+            <h2>🎯 Test Results</h2>
+            <p><strong>Status:</strong> Both Python and Java now execute real code!</p>
+            <p><strong>Location:</strong> <a href="https://taeezx44.github.io/de3ew/" target="_blank">DevAcademy (2) - Live Demo</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/taeezx44/de3ew" target="_blank">Repository</a></p>
+        </div>
+
+        <div class="test-section">
+            <h2>🐍 Python Test Example</h2>
+            <textarea id="python-code" readonly># Python Test - Real Execution!
+def fibonacci(n):
+    """Calculate Fibonacci sequence"""
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Test Fibonacci
+print("Fibonacci Sequence:")
+for i in range(10):
+    result = fibonacci(i)
+    print(f"F({i}) = {result}")
+
+# List operations
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+squares = [x**2 for x in numbers]
+print(f"\nOriginal: {numbers}")
+print(f"Squares: {squares}")
+print(f"Sum: {sum(squares)}")
+
+# Dictionary example
+student = {"name": "DevAcademy", "level": "Advanced", "score": 95}
+print(f"\nStudent: {student['name']} - {student['level']}")
+
+print("\n✅ Python execution completed!")</textarea>
+            <button onclick="window.open('https://taeezx44.github.io/de3ew/', '_blank')">🚀 Test Python Live</button>
+        </div>
+
+        <div class="test-section">
+            <h2>☕ Java Test Example</h2>
+            <textarea id="java-code" readonly>// Java Test - Real Compilation!
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Java Demo ===");
+        
+        // Factorial calculation
+        int n = 6;
+        long factorial = calculateFactorial(n);
+        System.out.println("Factorial of " + n + " = " + factorial);
+        
+        // Array operations
+        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int evenSum = 0;
+        int oddCount = 0;
+        
+        for (int num : numbers) {
+            if (num % 2 == 0) {
+                evenSum += num;
+            } else {
+                oddCount++;
+            }
+        }
+        
+        System.out.println("Sum of even numbers: " + evenSum);
+        System.out.println("Count of odd numbers: " + oddCount);
+        
+        // String operations
+        String message = "DevAcademy";
+        System.out.println("Uppercase: " + message.toUpperCase());
+        System.out.println("Length: " + message.length());
+        
+        // Object creation
+        Student student = new Student("Tae", 95);
+        System.out.println("Student: " + student);
+        
+        System.out.println("✅ Java compilation completed!");
+    }
+    
+    public static long calculateFactorial(int n) {
+        if (n <= 1) return 1;
+        return n * calculateFactorial(n - 1);
+    }
+    
+    static class Student {
+        String name;
+        int score;
+        
+        Student(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+        
+        @Override
+        public String toString() {
+            return name + " (Score: " + score + ")";
+        }
+    }
+}</textarea>
+            <button onclick="window.open('https://taeezx44.github.io/de3ew/', '_blank')">☕ Test Java Live</button>
+        </div>
+
+        <div class="test-section info">
+            <h2>📋 How to Test</h2>
+            <ol>
+                <li>Open <a href="https://taeezx44.github.io/de3ew/" target="_blank">DevAcademy (2)</a></li>
+                <li>Navigate to Playground</li>
+                <li>Select Python or Java language</li>
+                <li>Paste the test code above</li>
+                <li>Click Run ▶</li>
+                <li>See real execution results!</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2>🎉 Expected Output</h2>
+            <div class="features">
+                <div>
+                    <h3>Python Output:</h3>
+                    <div class="output">Fibonacci Sequence:
+F(0) = 0
+F(1) = 1
+F(2) = 1
+F(3) = 2
+F(4) = 3
+F(5) = 5
+F(6) = 8
+F(7) = 13
+F(8) = 21
+F(9) = 34
+
+Original: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Squares: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+Sum: 385
+
+Student: DevAcademy - Advanced
+
+✅ Python execution completed!</div>
+                </div>
+                <div>
+                    <h3>Java Output:</h3>
+                    <div class="output">=== Java Demo ===
+Factorial of 6 = 720
+Sum of even numbers: 30
+Count of odd numbers: 5
+Uppercase: DEVACADEMY
+Length: 10
+Student: Tae (Score: 95)
+✅ Java compilation completed!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
